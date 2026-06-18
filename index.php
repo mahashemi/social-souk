@@ -1,0 +1,137 @@
+<?php
+require_once __DIR__ . '/db.php';
+
+$user = auth();
+$catSlug = $_GET['cat'] ?? '';
+
+$categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
+
+$sql = "SELECT l.*, u.name AS seller_name, c.name AS cat_name, c.icon AS cat_icon
+        FROM listings l
+        JOIN users u ON u.id = l.user_id
+        LEFT JOIN categories c ON c.id = l.category_id
+        WHERE l.is_active = 1";
+$params = [];
+if ($catSlug !== '') {
+    $sql .= ' AND c.slug = ?';
+    $params[] = $catSlug;
+}
+$sql .= ' ORDER BY l.created_at DESC LIMIT 24';
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$listings = $stmt->fetchAll();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= e(SITE_NAME) ?> — <?= e(SITE_TAGLINE) ?></title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <div class="nav-links">
+        <a href="index.php">Browse</a>
+        <a href="search.php">Search</a>
+        <?php if ($user): ?>
+            <a href="create-listing.php">+ Sell Item</a>
+            <a href="chat.php">Messages</a>
+            <a href="dashboard.php">Dashboard</a>
+            <a href="profile.php?id=<?= (int) $user['id'] ?>"><?= e($user['name']) ?></a>
+            <a href="logout.php" class="nav-btn">Logout</a>
+        <?php else: ?>
+            <a href="login.php">Login</a>
+            <a href="register.php" class="nav-btn">Join Free</a>
+        <?php endif; ?>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-content">
+        <h1>Trade with <span>Barakah</span></h1>
+        <p>The social marketplace for Muslims — buy, sell, chat, and connect with your community. Every listing built on trust and halal values.</p>
+        <div class="hero-actions">
+            <?php if ($user): ?>
+                <a href="create-listing.php" class="btn btn-primary">+ Post a Listing</a>
+            <?php else: ?>
+                <a href="register.php" class="btn btn-primary">Join SocialSouk</a>
+            <?php endif; ?>
+            <a href="#listings" class="btn btn-secondary">Browse Listings</a>
+        </div>
+    </div>
+</header>
+
+<div class="container" id="listings" style="padding-top:3rem">
+    <h2 class="section-title">Shop by <span>Category</span></h2>
+    <div class="category-grid">
+        <a href="index.php" class="cat-chip <?= $catSlug === '' ? 'active' : '' ?>">🛒 All</a>
+        <?php foreach ($categories as $c): ?>
+            <a href="?cat=<?= e($c['slug']) ?>" class="cat-chip <?= $catSlug === $c['slug'] ? 'active' : '' ?>">
+                <?= e($c['icon']) ?> <?= e($c['name']) ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<div class="container section">
+    <h2 class="section-title">Latest <span>Listings</span></h2>
+    <p class="section-sub"><?= count($listings) ?> item(s) available right now</p>
+
+    <?php if (!$listings): ?>
+        <div class="empty-state">
+            <div class="icon">📭</div>
+            <h3>No listings yet in this category</h3>
+            <p>Be the first to post something here.</p>
+        </div>
+    <?php else: ?>
+    <div class="grid-4">
+        <?php foreach ($listings as $l): ?>
+        <a href="listing.php?id=<?= (int) $l['id'] ?>" class="card">
+            <div class="card-img"><?= e($l['cat_icon'] ?: '📦') ?></div>
+            <div class="card-body">
+                <div class="card-title"><?= e($l['title']) ?></div>
+                <div class="card-price">
+                    <?= $l['price'] > 0 ? 'Rs ' . number_format((float) $l['price']) : 'Free / Swap' ?>
+                </div>
+                <div class="card-meta">
+                    <span>📍 <?= e($l['city'] ?: 'N/A') ?></span>
+                    <?php if ($l['halal_badge']): ?><span class="halal-badge">✓ Halal</span><?php endif; ?>
+                </div>
+            </div>
+        </a>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand">🛍️ <?= e(SITE_NAME) ?></div>
+            <p>Trade with Barakah. A halal social marketplace built for the Ummah.</p>
+        </div>
+        <div>
+            <div class="footer-heading">Explore</div>
+            <ul class="footer-links">
+                <li><a href="index.php">Browse Listings</a></li>
+                <li><a href="search.php">Search</a></li>
+                <li><a href="register.php">Join Free</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-heading">Account</div>
+            <ul class="footer-links">
+                <li><a href="login.php">Login</a></li>
+                <li><a href="dashboard.php">Dashboard</a></li>
+                <li><a href="chat.php">Messages</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with ❤️ for the Ummah.</div>
+</footer>
+
+</body>
+</html>
