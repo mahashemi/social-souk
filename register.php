@@ -36,13 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare('INSERT INTO users (name, email, password, city, country, phone) VALUES (?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$name, $email, $hash, $city, $country, $phone]);
+        $token = generateVerificationToken();
+        $stmt = $pdo->prepare(
+            'INSERT INTO users (name, email, password, city, country, phone, verification_token, verification_expires)
+             VALUES (?, ?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))'
+        );
+        $stmt->execute([$name, $email, $hash, $city, $country, $phone, $token]);
 
-        $userId = (int) $pdo->lastInsertId();
-        $_SESSION['user'] = ['id' => $userId, 'name' => $name, 'email' => $email, 'is_admin' => 0];
-        flash('success', 'Welcome to SocialSouk, ' . $name . '! Your account is ready.');
-        redirect('index.php');
+        sendVerificationEmail($email, $name, $token);
+        $devParam = DEV_SHOW_VERIFY_LINK ? '&token=' . $token : '';
+        redirect('verify-pending.php?email=' . urlencode($email) . $devParam);
     }
 }
 ?>

@@ -1,0 +1,150 @@
+<?php
+require_once __DIR__ . '/db.php';
+requireAuth();
+$user = auth();
+
+$id = (int) ($_GET['id'] ?? 0);
+$stmt = $pdo->prepare('SELECT * FROM listings WHERE id = ?');
+$stmt->execute([$id]);
+$listing = $stmt->fetch();
+
+if (!$listing) {
+    http_response_code(404);
+    die('<p style="font-family:sans-serif;padding:3rem;text-align:center">Listing not found. <a href="index.php">Go back</a></p>');
+}
+
+$isOwner = $listing['user_id'] == $user['id'];
+$isAdmin = !empty($user['is_admin']);
+if (!$isOwner && !$isAdmin) {
+    http_response_code(403);
+    die('<p style="font-family:sans-serif;padding:3rem;text-align:center">You do not have permission to edit this listing. <a href="listing.php?id=' . $id . '">Go back</a></p>');
+}
+
+$categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
+$errors = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCsrf();
+
+    $title       = trim($_POST['title'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $price       = (float) ($_POST['price'] ?? 0);
+    $priceType   = $_POST['price_type'] ?? 'fixed';
+    $categoryId  = (int) ($_POST['category_id'] ?? 0);
+    $city        = trim($_POST['city'] ?? '');
+    $halalBadge  = isset($_POST['halal_badge']) ? 1 : 0;
+    $isActive    = isset($_POST['is_active']) ? 1 : 0;
+
+    if (mb_strlen($title) < 5) $errors[] = 'Title must be at least 5 characters.';
+    if (mb_strlen($description) < 10) $errors[] = 'Description must be at least 10 characters.';
+    if (!in_array($priceType, ['fixed','negotiable','free','swap'], true)) $errors[] = 'Invalid price type.';
+
+    if (!$errors) {
+        $stmt = $pdo->prepare(
+            'UPDATE listings SET title=?, description=?, price=?, price_type=?, category_id=?, city=?, halal_badge=?, is_active=?, updated_by=?, updated_at=NOW()
+             WHERE id=?'
+        );
+        $stmt->execute([$title, $description, $price, $priceType, $categoryId ?: null, $city, $halalBadge, $isActive, $user['id'], $id]);
+        flash('success', 'Listing updated.');
+        redirect('listing.php?id=' . $id);
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Listing — <?= e(SITE_NAME) ?></title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <div class="nav-links">
+        <a href="index.php">Browse</a>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="logout.php" class="nav-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="dashboard-wrap">
+    <div class="dashboard-header">
+        <h2>✏️ Edit Listing</h2>
+        <p><?= $isAdmin && !$isOwner ? 'You are editing this listing as an admin.' : 'Update your listing details below.' ?></p>
+    </div>
+
+    <?php if ($errors): ?>
+        <div class="alert alert-error"><?php foreach ($errors as $err): ?><div><?= e($err) ?></div><?php endforeach; ?></div>
+    <?php endif; ?>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control" value="<?= e($_POST['title'] ?? $listing['title']) ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" required><?= e($_POST['description'] ?? $listing['description']) ?></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category_id" class="form-control">
+                            <option value="">Select category</option>
+                            <?php foreach ($categories as $c): ?>
+                                <option value="<?= (int) $c['id'] ?>" <?= $listing['category_id'] == $c['id'] ? 'selected' : '' ?>><?= e($c['icon']) ?> <?= e($c['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" value="<?= e($_POST['city'] ?? $listing['city']) ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Price (Rs)</label>
+                        <input type="number" name="price" class="form-control" min="0" step="0.01" value="<?= e($_POST['price'] ?? $listing['price']) ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price Type</label>
+                        <select name="price_type" class="form-control">
+                            <?php foreach (['fixed'=>'Fixed Price','negotiable'=>'Negotiable','free'=>'Free','swap'=>'Swap / Trade'] as $val=>$label): ?>
+                                <option value="<?= $val ?>" <?= $listing['price_type'] === $val ? 'selected' : '' ?>><?= $label ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+                        <input type="checkbox" name="halal_badge" value="1" style="width:auto" <?= $listing['halal_badge'] ? 'checked' : '' ?>>
+                        This item carries a Halal Certification / is inherently halal
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+                        <input type="checkbox" name="is_active" value="1" style="width:auto" <?= $listing['is_active'] ? 'checked' : '' ?>>
+                        Listing is active (visible to buyers)
+                    </label>
+                </div>
+
+                <div style="display:flex;gap:.8rem">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="listing.php?id=<?= $id ?>" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -36,6 +36,7 @@ $unreadCount = $unread->fetch()['c'];
         <a href="index.php">Browse</a>
         <a href="create-listing.php">+ Sell Item</a>
         <a href="chat.php">Messages <?= $unreadCount ? '(' . (int) $unreadCount . ')' : '' ?></a>
+        <a href="edit-profile.php">Edit Profile</a>
         <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
         <a href="logout.php" class="nav-btn">Logout</a>
     </div>
@@ -73,7 +74,8 @@ $unreadCount = $unread->fetch()['c'];
                 <td><?= e($l['city'] ?: '—') ?></td>
                 <td><?= (int) $l['views'] ?></td>
                 <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Inactive' ?></span></td>
-                <td>
+                <td style="display:flex;gap:.4rem">
+                    <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
                     <form method="post" onsubmit="return confirm('Delete this listing?')">
                         <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
                         <button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Delete</button>

@@ -34,6 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare('UPDATE listings SET is_active = 1 - is_active WHERE id = ?')->execute([(int) $_POST['toggle_listing']]);
     } elseif (isset($_POST['toggle_verify'])) {
         $pdo->prepare('UPDATE users SET is_verified = 1 - is_verified WHERE id = ?')->execute([(int) $_POST['toggle_verify']]);
+    } elseif (isset($_POST['toggle_admin'])) {
+        $targetId = (int) $_POST['toggle_admin'];
+        if ($targetId !== (int) $user['id']) {
+            $pdo->prepare('UPDATE users SET is_admin = 1 - is_admin WHERE id = ?')->execute([$targetId]);
+        }
     } elseif (isset($_POST['delete_listing'])) {
         $pdo->prepare('DELETE FROM listings WHERE id = ?')->execute([(int) $_POST['delete_listing']]);
     }
@@ -120,6 +125,7 @@ $listings = $pdo->query(
                     <td><?= (int) $l['views'] ?></td>
                     <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Hidden' ?></span></td>
                     <td style="display:flex;gap:.4rem">
+                        <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
                         <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline"><?= $l['is_active'] ? 'Hide' : 'Show' ?></button></form>
                         <form method="post" onsubmit="return confirm('Delete this listing permanently?')"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button></form>
                     </td>
@@ -142,8 +148,14 @@ $listings = $pdo->query(
                     <td><?= e($u['phone'] ?: '—') ?></td>
                     <td><?= $u['is_verified'] ? '✓ Verified' : '—' ?></td>
                     <td><?= date('M j, Y', strtotime($u['created_at'])) ?></td>
-                    <td>
+                    <td style="display:flex;gap:.4rem">
                         <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_verify" value="<?= (int) $u['id'] ?>" class="btn btn-sm btn-outline"><?= $u['is_verified'] ? 'Unverify' : 'Verify' ?></button></form>
+                        <?php if ((int) $u['id'] !== (int) $user['id']): ?>
+                        <form method="post" onsubmit="return confirm('<?= $u['is_admin'] ? 'Remove admin privileges from' : 'Grant admin privileges to' ?> <?= e($u['name']) ?>?')">
+                            <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                            <button type="submit" name="toggle_admin" value="<?= (int) $u['id'] ?>" class="btn btn-sm btn-outline"><?= $u['is_admin'] ? 'Revoke Admin' : 'Make Admin' ?></button>
+                        </form>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -4,10 +4,12 @@ $user = auth();
 
 $id = (int) ($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT l.*, u.name AS seller_name, u.city AS seller_city, u.id AS seller_id, c.name AS cat_name, c.icon AS cat_icon
+    'SELECT l.*, u.name AS seller_name, u.city AS seller_city, u.id AS seller_id, c.name AS cat_name, c.icon AS cat_icon,
+            e.name AS editor_name, e.is_admin AS editor_is_admin
      FROM listings l
      JOIN users u ON u.id = l.user_id
      LEFT JOIN categories c ON c.id = l.category_id
+     LEFT JOIN users e ON e.id = l.updated_by
      WHERE l.id = ?'
 );
 $stmt->execute([$id]);
@@ -62,12 +64,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
         <div class="card-body">
             <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:1rem">
                 <div>
-                    <h1 style="font-size:1.5rem;margin-bottom:.4rem"><?= e($listing['title']) ?></h1>
+                    <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap">
+                        <h1 style="font-size:1.5rem;margin-bottom:.4rem"><?= e($listing['title']) ?></h1>
+                        <?php if ($user && ($user['id'] == $listing['seller_id'] || !empty($user['is_admin']))): ?>
+                            <a href="edit-listing.php?id=<?= $id ?>" class="btn btn-sm btn-outline">✏️ Edit</a>
+                        <?php endif; ?>
+                    </div>
                     <div class="card-meta">
                         <span>📍 <?= e($listing['city'] ?: 'N/A') ?></span>
                         <span>👁️ <?= (int) $listing['views'] ?> views</span>
                         <?php if ($listing['halal_badge']): ?><span class="halal-badge">✓ Halal</span><?php endif; ?>
                     </div>
+                    <?php if ($listing['editor_name']): ?>
+                        <div style="font-size:.78rem;color:var(--text-light);margin-top:.3rem">
+                            Last edited by <?= e($listing['editor_name']) ?><?= $listing['editor_is_admin'] ? ' (Admin)' : '' ?>
+                            on <?= date('M j, Y', strtotime($listing['updated_at'])) ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-price" style="font-size:1.8rem">
                     <?= $listing['price'] > 0 ? 'Rs ' . number_format((float) $listing['price']) : 'Free / Swap' ?>

@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS users (
     bio         TEXT,
     avatar      VARCHAR(300),
     is_verified TINYINT(1) DEFAULT 0,
+    verification_token   VARCHAR(64) NULL,
+    verification_expires  DATETIME NULL,
     is_admin    TINYINT(1) DEFAULT 0,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email (email)
@@ -60,8 +62,11 @@ CREATE TABLE IF NOT EXISTS listings (
     is_active    TINYINT(1) DEFAULT 1,
     views        INT UNSIGNED DEFAULT 0,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_by   INT UNSIGNED NULL,
+    updated_at   TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_active (is_active),
     INDEX idx_user (user_id),
     INDEX idx_category (category_id)
