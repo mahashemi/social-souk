@@ -64,10 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p style="text-align:center;margin-top:1.2rem;font-size:.88rem;color:var(--text-light)">
             New here? <a href="register.php">Create an account</a>
         </p>
-
-        <div class="alert alert-info" style="margin-top:1.5rem;font-size:.82rem">
-            <strong>Demo account:</strong> admin@socialsouk.net / Admin@123
-        </div>
     </div>
 </div>
 </body>

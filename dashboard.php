@@ -36,6 +36,7 @@ $unreadCount = $unread->fetch()['c'];
         <a href="index.php">Browse</a>
         <a href="create-listing.php">+ Sell Item</a>
         <a href="chat.php">Messages <?= $unreadCount ? '(' . (int) $unreadCount . ')' : '' ?></a>
+        <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
         <a href="logout.php" class="nav-btn">Logout</a>
     </div>
 </nav>

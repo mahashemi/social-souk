@@ -1,6 +1,6 @@
--- SocialSouk Database Schema
+-- SocialSouk Database Schema (Production)
 -- Run this file once to set up your database.
--- Command: mysql -u root -p < schema.sql
+-- Command: mysql --default-character-set=utf8mb4 -u root -p < schema.sql
 
 CREATE DATABASE IF NOT EXISTS social_souk
     CHARACTER SET utf8mb4
@@ -107,21 +107,9 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (seller_id)   REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- ── Demo Admin User (password: Admin@123) ────────────────────────────────
+-- ── Initial Admin Account ───────────────────────────────────────────────
+-- Default password: Admin@123
+-- IMPORTANT: Log in immediately and change this password via your profile.
 INSERT INTO users (name, email, password, is_admin, is_verified) VALUES
-('Admin', 'admin@socialsouk.net',
- '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 1);
-
--- ── Demo Listings ─────────────────────────────────────────────────────────
-INSERT INTO users (name, email, password, city, country, phone) VALUES
-('Fatima Khan',    'fatima@example.com',  '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Karachi',  'Pakistan', '03001234567'),
-('Ahmed Al-Noor',  'ahmed@example.com',   '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lahore',   'Pakistan', '03111234567'),
-('Maryam Hussain', 'maryam@example.com',  '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Islamabad','Pakistan', '03211234567');
-
-INSERT INTO listings (user_id, category_id, title, description, price, price_type, city, halal_badge) VALUES
-(2, 1,  'Holy Quran — Arabic & English (Sahih Int)', 'Hardcover, mint condition. Purchased but have two copies now. Beautiful typography.', 1200.00, 'negotiable', 'Karachi',  1),
-(2, 3,  'Premium Prayer Mat — Soft Velvet', 'Soft burgundy velvet prayer mat, 120x70cm, with compass. Like new.', 800.00, 'fixed', 'Karachi', 1),
-(3, 2,  'Modest Abaya — Black, Size M', 'Flowy chiffon abaya, worn once. Perfect condition. Colour is true black.', 2500.00, 'negotiable', 'Lahore', 1),
-(3, 5,  'Pure Oud Perfume — Alcohol Free 50ml', 'Authentic Arabic Oud fragrance, no alcohol. Very long lasting.', 1800.00, 'fixed', 'Lahore', 1),
-(4, 4,  'Organic Medjool Dates — 1kg Box', 'Freshly imported Medjool dates from Madinah. Halal certified. Soft and sweet.', 950.00, 'fixed', 'Islamabad', 1),
-(4, 1,  'Islamic History Books — Set of 5', 'Set of 5 Islamic history books in excellent condition. Great for students.', 1500.00, 'negotiable', 'Islamabad', 1);
+('Site Admin', 'admin@socialsouk.net',
+ '$2y$10$Rn49XbRBi1VaO9H6AnkdfOhBEGhhe.D.4.HYAJaquZDWuHT7qXS2q', 1, 1);

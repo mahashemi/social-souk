@@ -40,6 +40,7 @@ $listings = $stmt->fetchAll();
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
+            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
             <a href="profile.php?id=<?= (int) $user['id'] ?>"><?= e($user['name']) ?></a>
             <a href="logout.php" class="nav-btn">Logout</a>
         <?php else: ?>
