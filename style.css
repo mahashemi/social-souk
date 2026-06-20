@@ -382,13 +382,40 @@ footer {
     .feed-layout { grid-template-columns: 1fr; }
     .feed-sidebar, .feed-right { position: static; }
 }
-@media (max-width: 680px) {
-    .nav-links { display: none; }
-    .nav-menu-toggle { display: block; }
-    .hero { padding: 3rem 1rem; }
-    .grid-2 { grid-template-columns: 1fr; }
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; align-items: stretch; height: auto;
+        padding: .7rem 1rem; gap: .5rem;
+    }
+    .nav-brand { font-size: 1.2rem; text-align: center; }
+    .nav-links {
+        flex-wrap: wrap; justify-content: center; gap: .4rem .6rem; width: 100%;
+    }
+    .nav-links a { font-size: .82rem; padding: .35rem .65rem; }
+    .hero { padding: 2.5rem 1rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero p { font-size: .95rem; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-stats { gap: 1.5rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
     .chat-list { width: 80px; }
     .chat-list-item .chat-preview { display: none; }
-    .auth-box { padding: 1.8rem; }
+    .auth-box { padding: 1.5rem; }
+    .container, .section { padding-left: 1rem; padding-right: 1rem; }
+    .dashboard-wrap { padding: 0 1rem; }
+    .dashboard-header { padding: 1.2rem 1.4rem; }
+
+    /* Tables: allow horizontal scroll on the container instead of breaking layout */
+    .table { font-size: .8rem; }
+    .table th, .table td { padding: .6rem .5rem; white-space: nowrap; }
+    .dashboard-wrap, .container { overflow-x: auto; }
+
+    .profile-stats { gap: 1.2rem; }
+    .card-footer form { display: flex; flex-direction: column; gap: .5rem; }
+}
+@media (max-width: 420px) {
+    .hero h1 { font-size: 1.4rem; }
+    .nav-brand { font-size: 1.05rem; }
+    .btn { padding: .6rem 1.2rem; font-size: .88rem; }
 }
