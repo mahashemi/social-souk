@@ -91,7 +91,7 @@ $listings = $stmt->fetchAll();
     <div class="grid-4">
         <?php foreach ($listings as $l): ?>
         <a href="listing.php?id=<?= (int) $l['id'] ?>" class="card">
-            <div class="card-img"><?= e($l['cat_icon'] ?: '📦') ?></div>
+            <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= e($l['cat_icon'] ?: '📦') ?><?php endif; ?></div>
             <div class="card-body">
                 <div class="card-title"><?= e($l['title']) ?></div>
                 <div class="card-price">

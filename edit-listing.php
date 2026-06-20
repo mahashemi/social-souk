@@ -40,11 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($priceType, ['fixed','negotiable','free','swap'], true)) $errors[] = 'Invalid price type.';
 
     if (!$errors) {
+        $imagePath = handleImageUpload('image', 'listings') ?? $listing['image_url'];
         $stmt = $pdo->prepare(
-            'UPDATE listings SET title=?, description=?, price=?, price_type=?, category_id=?, city=?, halal_badge=?, is_active=?, updated_by=?, updated_at=NOW()
+            'UPDATE listings SET title=?, description=?, price=?, price_type=?, category_id=?, city=?, halal_badge=?, is_active=?, image_url=?, updated_by=?, updated_at=NOW()
              WHERE id=?'
         );
-        $stmt->execute([$title, $description, $price, $priceType, $categoryId ?: null, $city, $halalBadge, $isActive, $user['id'], $id]);
+        $stmt->execute([$title, $description, $price, $priceType, $categoryId ?: null, $city, $halalBadge, $isActive, $imagePath, $user['id'], $id]);
         flash('success', 'Listing updated.');
         redirect('listing.php?id=' . $id);
     }
@@ -80,8 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="card">
         <div class="card-body">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+
+                <div class="form-group">
+                    <label class="form-label">Photo</label>
+                    <?php if ($listing['image_url']): ?>
+                        <img src="<?= e($listing['image_url']) ?>" style="max-width:200px;border-radius:8px;margin-bottom:.6rem;display:block">
+                    <?php endif; ?>
+                    <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                    <div class="form-hint">Upload a new photo to replace the current one, or leave blank to keep it.</div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-label">Title</label>

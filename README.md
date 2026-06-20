@@ -35,8 +35,8 @@ SocialSouk combines three things most platforms keep separate:
 | Halal-certified badge on listings | ✅ |
 | Country selector with auto-filled dial code + validated 10-digit phone | ✅ |
 | Admin panel — manage users & listings, grant/revoke admin, export CSV | ✅ |
+| Image upload for listings (JPG/PNG/WEBP, 5MB max, validated server-side) | ✅ |
 | Reviews & ratings on completed trades | 🔜 planned |
-| Image upload for listings | 🔜 planned |
 
 ## Project Structure
 
@@ -98,6 +98,10 @@ Visit `/admin.php` while logged in as an admin (`is_admin = 1`) to:
 ## Email Verification
 
 New accounts must verify their email before logging in. `mail()` is attempted on registration, but **most local environments (XAMPP) have no SMTP configured**, so delivery will silently fail. To make local testing possible, `config.php` has `DEV_SHOW_VERIFY_LINK = true`, which shows the verification link directly on the "check your email" page after registering. **Set this to `false` once real SMTP/email delivery is wired up in production** — otherwise anyone could self-verify without owning the email address.
+
+## Image Uploads
+
+Listings support a photo upload (JPG/PNG/WEBP, max 5MB). Files are validated server-side with `getimagesize()` (not just by extension), renamed to a random filename, and stored in `/uploads/listings/`. That folder has a `.htaccess` blocking PHP/script execution, so an uploaded file can never run as code even if disguised with a fake extension. If no photo is uploaded, listings fall back to a category icon.
 
 ## Editing & Attribution
 

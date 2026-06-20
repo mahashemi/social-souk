@@ -60,7 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
     <?php if (flash('success')): ?><div class="alert alert-success"><?= e(flash('success')) ?></div><?php endif; ?>
 
     <div class="card">
-        <div class="card-img" style="height:280px;font-size:5rem"><?= e($listing['cat_icon'] ?: '📦') ?></div>
+        <div class="card-img" style="height:280px;font-size:5rem">
+            <?php if ($listing['image_url']): ?><img src="<?= e($listing['image_url']) ?>" alt=""><?php else: ?><?= e($listing['cat_icon'] ?: '📦') ?><?php endif; ?>
+        </div>
         <div class="card-body">
             <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:1rem">
                 <div>

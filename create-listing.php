@@ -22,11 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($priceType, ['fixed','negotiable','free','swap'], true)) $errors[] = 'Invalid price type.';
 
     if (!$errors) {
+        $imagePath = handleImageUpload('image', 'listings');
         $stmt = $pdo->prepare(
-            'INSERT INTO listings (user_id, category_id, title, description, price, price_type, city, halal_badge)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO listings (user_id, category_id, title, description, price, price_type, city, halal_badge, image_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
-        $stmt->execute([$user['id'], $categoryId ?: null, $title, $description, $price, $priceType, $city, $halalBadge]);
+        $stmt->execute([$user['id'], $categoryId ?: null, $title, $description, $price, $priceType, $city, $halalBadge, $imagePath]);
         $newId = (int) $pdo->lastInsertId();
         flash('success', 'Your listing is live!');
         redirect('listing.php?id=' . $newId);
@@ -65,8 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="card">
         <div class="card-body">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+
+                <div class="form-group">
+                    <label class="form-label">Photo (optional)</label>
+                    <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                    <div class="form-hint">JPG, PNG, or WEBP. Max 5MB. Leave blank to use a category icon instead.</div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-label">Title</label>

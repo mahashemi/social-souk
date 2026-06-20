@@ -35,10 +35,10 @@
 - [x] Implement search (by keyword, city) — P1
 - [x] Implement halal badge self-declaration — P2
 - [x] Implement admin panel (users, listings, CSV export) — P2
-- [ ] Implement edit listing (currently delete + repost only) — P2
+- [x] Implement edit listing (owner or admin, with image replace) — P2
+- [x] Image upload for listings (JPG/PNG/WEBP, 5MB max, server-validated) — P2
 - [ ] Implement social feed scoped to followed users only — P2
 - [ ] Implement reviews / ratings — P2
-- [ ] Image upload (to server or cloud) — currently no image support — P2
 
 ## Phase 3 — Frontend / UI
 - [x] Create style.css (Islamic design system) — P1
