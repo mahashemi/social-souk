@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
     is_admin    TINYINT(1) DEFAULT 0,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email (email)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Listing Categories ────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS categories (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS categories (
     name  VARCHAR(100) NOT NULL,
     slug  VARCHAR(100) NOT NULL UNIQUE,
     icon  VARCHAR(10)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO categories (name, slug, icon) VALUES
 ('Books & Quran',        'books',      '📖'),
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS listings (
     INDEX idx_active (is_active),
     INDEX idx_user (user_id),
     INDEX idx_category (category_id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Follow System ─────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS follows (
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS follows (
     PRIMARY KEY (follower_id, following_id),
     FOREIGN KEY (follower_id)  REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Messages (Chat) ───────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS messages (
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (listing_id)  REFERENCES listings(id) ON DELETE SET NULL,
     INDEX idx_conversation (sender_id, receiver_id),
     INDEX idx_receiver (receiver_id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Reviews ───────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS reviews (
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     UNIQUE KEY one_review (reviewer_id, seller_id, listing_id),
     FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id)   REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Initial Admin Account ───────────────────────────────────────────────
 -- Default password: Admin@123
