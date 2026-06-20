@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Price (Rs)</label>
+                        <label class="form-label">Price ($)</label>
                         <input type="number" name="price" class="form-control" placeholder="0" min="0" step="0.01" value="<?= e($_POST['price'] ?? '') ?>">
                     </div>
                     <div class="form-group">

@@ -70,7 +70,7 @@ $unreadCount = $unread->fetch()['c'];
             <?php foreach ($myListings as $l): ?>
             <tr>
                 <td><a href="listing.php?id=<?= (int) $l['id'] ?>"><?= e($l['cat_icon'] ?: '📦') ?> <?= e($l['title']) ?></a></td>
-                <td><?= $l['price'] > 0 ? 'Rs ' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
+                <td><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
                 <td><?= e($l['city'] ?: '—') ?></td>
                 <td><?= (int) $l['views'] ?></td>
                 <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Inactive' ?></span></td>

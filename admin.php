@@ -119,7 +119,7 @@ $listings = $pdo->query(
                 <tr>
                     <td><a href="listing.php?id=<?= (int) $l['id'] ?>" target="_blank"><?= e($l['title']) ?></a></td>
                     <td><?= e($l['seller_name']) ?></td>
-                    <td><?= $l['price'] > 0 ? 'Rs ' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
+                    <td><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
                     <td><?= e($l['city'] ?: '—') ?></td>
                     <td><?= $l['halal_badge'] ? '✓' : '—' ?></td>
                     <td><?= (int) $l['views'] ?></td>

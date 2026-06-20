@@ -95,7 +95,7 @@ $listings = $stmt->fetchAll();
             <div class="card-body">
                 <div class="card-title"><?= e($l['title']) ?></div>
                 <div class="card-price">
-                    <?= $l['price'] > 0 ? 'Rs ' . number_format((float) $l['price']) : 'Free / Swap' ?>
+                    <?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free / Swap' ?>
                 </div>
                 <div class="card-meta">
                     <span>📍 <?= e($l['city'] ?: 'N/A') ?></span>

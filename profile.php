@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
             <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= e($l['cat_icon'] ?: '📦') ?><?php endif; ?></div>
             <div class="card-body">
                 <div class="card-title"><?= e($l['title']) ?></div>
-                <div class="card-price"><?= $l['price'] > 0 ? 'Rs ' . number_format((float) $l['price']) : 'Free / Swap' ?></div>
+                <div class="card-price"><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free / Swap' ?></div>
             </div>
         </a>
         <?php endforeach; ?>

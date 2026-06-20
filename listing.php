@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
                     <?php endif; ?>
                 </div>
                 <div class="card-price" style="font-size:1.8rem">
-                    <?= $listing['price'] > 0 ? 'Rs ' . number_format((float) $listing['price']) : 'Free / Swap' ?>
+                    <?= $listing['price'] > 0 ? '$' . number_format((float) $listing['price']) : 'Free / Swap' ?>
                     <?php if ($listing['price_type'] === 'negotiable'): ?><div style="font-size:.8rem;color:var(--text-light);font-weight:400">Negotiable</div><?php endif; ?>
                 </div>
             </div>
