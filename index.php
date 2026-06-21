@@ -68,6 +68,28 @@ $listings = $stmt->fetchAll();
     </div>
 </header>
 
+<?php if (!$user): ?>
+<section class="mission-band">
+    <div class="mission-grid">
+        <div>
+            <h3>🎯 Our Vision</h3>
+            <p>To be the world's leading Islamic social commerce platform — a trusted digital space where Muslims across the globe trade, connect, and build community in harmony with their faith.</p>
+        </div>
+        <div>
+            <h3>🌍 Our Mission</h3>
+            <p>SocialSouk combines the connectivity of social media with the functionality of a marketplace, empowering Muslims to buy, sell, and chat in an environment built on halal values, transparency, and brotherhood (ukhuwwah).</p>
+        </div>
+    </div>
+    <div class="mission-cta">
+        <p>Already have an account?</p>
+        <div class="hero-actions" style="justify-content:center">
+            <a href="login.php" class="btn btn-primary">Log In</a>
+            <a href="register.php" class="btn btn-outline">Create Free Account</a>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <div class="container" id="listings" style="padding-top:3rem">
     <h2 class="section-title">Shop by <span>Category</span></h2>
     <div class="chip-row">

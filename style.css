@@ -108,6 +108,17 @@ img { max-width: 100%; height: auto; display: block; }
 
 .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+/* ── Mission/Vision band (shown to logged-out visitors only) ──
+   Helps a returning visitor whose session expired understand what this
+   platform is and that they need to log back in, instead of landing on an
+   ambiguous page with no context. */
+.mission-band { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 3rem 1.5rem; }
+.mission-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+.mission-grid h3 { font-size: 1.1rem; color: var(--green-deep); margin-bottom: .5rem; font-weight: 700; }
+.mission-grid p { color: var(--text-mid); font-size: .95rem; }
+.mission-cta { text-align: center; margin-top: 2.2rem; padding-top: 2rem; border-top: 1px solid var(--border); max-width: 1180px; margin-left: auto; margin-right: auto; }
+.mission-cta p { color: var(--text-mid); margin-bottom: 1rem; font-size: .95rem; font-weight: 600; }
+
 /* ── Buttons ── */
 .btn {
     display: inline-flex;
@@ -136,8 +147,11 @@ img { max-width: 100%; height: auto; display: block; }
 /* ── Container ── */
 .container { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
 
-/* ── Section ── */
-.section { padding: 4rem 0; }
+/* ── Section ──
+   Only sets vertical padding — must NOT touch left/right, or it zeroes out
+   .container's horizontal padding whenever both classes are combined
+   (`class="container section"`), causing flush-left misalignment. */
+.section { padding-top: 4rem; padding-bottom: 4rem; }
 .section-title {
     font-size: 1.8rem;
     font-weight: 700;
@@ -161,6 +175,10 @@ img { max-width: 100%; height: auto; display: block; }
     display: flex; gap: .6rem; flex-wrap: nowrap;
     overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
     padding-bottom: .35rem; margin-bottom: 1.6rem;
+    /* Fade the trailing edge so an off-screen chip reads as "more to scroll",
+       not an abruptly clipped/misaligned chip. */
+    mask-image: linear-gradient(to right, black 0%, black 94%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 94%, transparent 100%);
 }
 .chip-row::-webkit-scrollbar { display: none; }
 .cat-chip {
@@ -442,6 +460,8 @@ footer {
     .hero-actions { flex-direction: column; align-items: stretch; }
     .hero-stats { gap: 1.5rem; }
     .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .mission-grid { grid-template-columns: 1fr; gap: 1.8rem; }
+    .mission-band { padding: 2.2rem 1.2rem; }
     .form-row { grid-template-columns: 1fr; }
     .chat-list { width: 80px; }
     .chat-list-item .chat-preview { display: none; }
