@@ -34,6 +34,8 @@ $listings = $stmt->fetchAll();
 
 <nav class="navbar">
     <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
@@ -135,5 +137,6 @@ $listings = $stmt->fetchAll();
     <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with ❤️ for the Ummah.</div>
 </footer>
 
+<script src="app.js" defer></script>
 </body>
 </html>

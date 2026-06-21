@@ -28,6 +28,8 @@ if ($q !== '') {
 <body>
 <nav class="navbar">
     <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <?php if ($user): ?><a href="dashboard.php">Dashboard</a><a href="logout.php" class="nav-btn">Logout</a>
@@ -62,5 +64,6 @@ if ($q !== '') {
         </div>
     <?php endif; ?>
 </div>
+<script src="app.js" defer></script>
 </body>
 </html>

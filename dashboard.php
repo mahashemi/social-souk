@@ -33,6 +33,8 @@ $unreadCount = $unread->fetch()['c'];
 <body>
 <nav class="navbar">
     <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="create-listing.php">+ Sell Item</a>
@@ -88,5 +90,6 @@ $unreadCount = $unread->fetch()['c'];
     </table>
     <?php endif; ?>
 </div>
+<script src="app.js" defer></script>
 </body>
 </html>
