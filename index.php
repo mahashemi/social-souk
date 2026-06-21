@@ -70,7 +70,7 @@ $listings = $stmt->fetchAll();
 
 <div class="container" id="listings" style="padding-top:3rem">
     <h2 class="section-title">Shop by <span>Category</span></h2>
-    <div class="category-grid">
+    <div class="chip-row">
         <a href="index.php" class="cat-chip <?= $catSlug === '' ? 'active' : '' ?>">🛒 All</a>
         <?php foreach ($categories as $c): ?>
             <a href="?cat=<?= e($c['slug']) ?>" class="cat-chip <?= $catSlug === $c['slug'] ? 'active' : '' ?>">
