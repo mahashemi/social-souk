@@ -41,6 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif (isset($_POST['delete_listing'])) {
         $pdo->prepare('DELETE FROM listings WHERE id = ?')->execute([(int) $_POST['delete_listing']]);
+    } elseif (isset($_POST['add_category'])) {
+        $name = trim($_POST['name'] ?? '');
+        $slug = trim($_POST['slug'] ?? '') ?: strtolower(preg_replace('/[^a-z0-9]+/i', '-', $name));
+        $icon = trim($_POST['icon'] ?? '');
+        if ($name !== '') {
+            $pdo->prepare('INSERT INTO categories (name, slug, icon) VALUES (?, ?, ?)')->execute([$name, $slug, $icon]);
+        }
+    } elseif (isset($_POST['edit_category'])) {
+        $id = (int) $_POST['edit_category'];
+        $pdo->prepare('UPDATE categories SET name=?, slug=?, icon=? WHERE id=?')
+            ->execute([trim($_POST['name']), trim($_POST['slug']), trim($_POST['icon']), $id]);
+    } elseif (isset($_POST['delete_category'])) {
+        $pdo->prepare('DELETE FROM categories WHERE id = ?')->execute([(int) $_POST['delete_category']]);
+    } elseif (isset($_POST['save_settings'])) {
+        foreach (['SITE_NAME', 'SITE_TAGLINE'] as $key) {
+            $val = trim($_POST[$key] ?? '');
+            $pdo->prepare('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?')
+                ->execute([$key, $val, $val]);
+        }
+        flash('success', 'Settings updated.');
     }
     redirect('admin.php?tab=' . ($_GET['tab'] ?? 'overview'));
 }
@@ -59,6 +79,8 @@ $users = $pdo->query('SELECT * FROM users ORDER BY created_at DESC')->fetchAll()
 $listings = $pdo->query(
     'SELECT l.*, u.name AS seller_name FROM listings l JOIN users u ON u.id = l.user_id ORDER BY l.created_at DESC'
 )->fetchAll();
+$categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
+$currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,6 +129,8 @@ $listings = $pdo->query(
     <div class="tabs">
         <a href="?tab=users" class="tab-btn <?= $tab === 'users' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">👥 Users (<?= count($users) ?>)</a>
         <a href="?tab=listings" class="tab-btn <?= $tab === 'listings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">📦 Listings (<?= count($listings) ?>)</a>
+        <a href="?tab=categories" class="tab-btn <?= $tab === 'categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ Categories (<?= count($categories) ?>)</a>
+        <a href="?tab=settings" class="tab-btn <?= $tab === 'settings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">⚙️ Settings</a>
     </div>
 
     <?php if ($tab === 'listings'): ?>
@@ -134,6 +158,58 @@ $listings = $pdo->query(
                 <?php endforeach; ?>
             </tbody>
         </table>
+    <?php elseif ($tab === 'categories'): ?>
+        <div class="card" style="margin-bottom:1.5rem"><div class="card-body">
+            <h3 style="font-size:1rem;margin-bottom:1rem">+ Add New Category</h3>
+            <form method="post" style="display:grid;grid-template-columns:1fr 1fr 100px auto;gap:.6rem;align-items:end">
+                <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                <div class="form-group" style="margin:0"><label class="form-label">Name</label><input type="text" name="name" class="form-control" required></div>
+                <div class="form-group" style="margin:0"><label class="form-label">Slug (optional)</label><input type="text" name="slug" class="form-control" placeholder="auto-generated"></div>
+                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="📦"></div>
+                <button type="submit" name="add_category" value="1" class="btn btn-primary">+ Add</button>
+            </form>
+        </div></div>
+
+        <table class="table">
+            <thead><tr><th>Icon</th><th>Name</th><th>Slug</th><th>Actions</th></tr></thead>
+            <tbody>
+                <?php foreach ($categories as $c): $fid = 'cat-' . (int) $c['id']; ?>
+                <tr>
+                    <td><input type="text" name="icon" form="<?= $fid ?>" value="<?= e($c['icon']) ?>" class="form-control" style="width:70px;padding:.4rem"></td>
+                    <td><input type="text" name="name" form="<?= $fid ?>" value="<?= e($c['name']) ?>" class="form-control" style="padding:.4rem"></td>
+                    <td><input type="text" name="slug" form="<?= $fid ?>" value="<?= e($c['slug']) ?>" class="form-control" style="padding:.4rem"></td>
+                    <td style="display:flex;gap:.4rem">
+                        <form method="post" id="<?= $fid ?>" style="display:inline">
+                            <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                            <button type="submit" name="edit_category" value="<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline">Save</button>
+                        </form>
+                        <form method="post" onsubmit="return confirm('Delete this category? Listings using it will become uncategorized.')" style="display:inline">
+                            <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                            <button type="submit" name="delete_category" value="<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    <?php elseif ($tab === 'settings'): ?>
+        <?php if (flash('success')): ?><div class="alert alert-success"><?= e(flash('success')) ?></div><?php endif; ?>
+        <div class="card"><div class="card-body">
+            <h3 style="font-size:1rem;margin-bottom:1rem">Site Branding</h3>
+            <form method="post">
+                <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                <div class="form-group">
+                    <label class="form-label">Site Name</label>
+                    <input type="text" name="SITE_NAME" class="form-control" value="<?= e($currentSettings['SITE_NAME'] ?? SITE_NAME) ?>" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tagline</label>
+                    <input type="text" name="SITE_TAGLINE" class="form-control" value="<?= e($currentSettings['SITE_TAGLINE'] ?? SITE_TAGLINE) ?>">
+                </div>
+                <button type="submit" name="save_settings" value="1" class="btn btn-primary">Save Settings</button>
+            </form>
+        </div></div>
     <?php else: ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
             <a href="?export=users" class="btn btn-outline btn-sm">⬇ Download CSV</a>
