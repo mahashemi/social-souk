@@ -14,6 +14,7 @@ if (isset($_GET['export'])) {
         'users'    => ['sql' => 'SELECT id, name, email, phone, city, country, is_verified, is_admin, created_at FROM users ORDER BY id', 'file' => 'socialsouk_users.csv'],
         'listings' => ['sql' => "SELECT l.id, l.title, u.name AS seller, l.price, l.price_type, l.city, l.halal_badge, l.is_active, l.views, l.created_at
                                   FROM listings l JOIN users u ON u.id = l.user_id ORDER BY l.id", 'file' => 'socialsouk_listings.csv'],
+        'feedback' => ['sql' => 'SELECT id, name, email, message, is_read, created_at FROM feedback ORDER BY id DESC', 'file' => 'socialsouk_feedback.csv'],
     ];
     if (isset($map[$type])) {
         $rows = $pdo->query($map[$type]['sql'])->fetchAll();
@@ -61,6 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->execute([$key, $val, $val]);
         }
         flash('success', 'Settings updated.');
+    } elseif (isset($_POST['toggle_feedback_read'])) {
+        $pdo->prepare('UPDATE feedback SET is_read = 1 - is_read WHERE id = ?')->execute([(int) $_POST['toggle_feedback_read']]);
+    } elseif (isset($_POST['delete_feedback'])) {
+        $pdo->prepare('DELETE FROM feedback WHERE id = ?')->execute([(int) $_POST['delete_feedback']]);
     }
     redirect('admin.php?tab=' . ($_GET['tab'] ?? 'overview'));
 }
@@ -81,6 +86,7 @@ $listings = $pdo->query(
 )->fetchAll();
 $categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
 $currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
+$feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,13 +99,16 @@ $currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings'
 </head>
 <body>
 <nav class="navbar">
-    <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?> <small style="color:var(--gold);font-size:.7rem">ADMIN</small></div>
+    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?> <small style="color:var(--gold);font-size:.7rem">ADMIN</small></a>
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
+        <span class="nav-user">👤 <?= e($user['name']) ?></span>
         <a href="index.php">Site</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="about.php">About</a>
+        <a href="feedback.php">Feedback</a>
     </div>
 </nav>
 
@@ -133,6 +142,7 @@ $currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings'
         <a href="?tab=listings" class="tab-btn <?= $tab === 'listings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">📦 Listings (<?= count($listings) ?>)</a>
         <a href="?tab=categories" class="tab-btn <?= $tab === 'categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ Categories (<?= count($categories) ?>)</a>
         <a href="?tab=settings" class="tab-btn <?= $tab === 'settings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">⚙️ Settings</a>
+        <a href="?tab=feedback" class="tab-btn <?= $tab === 'feedback' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">💬 Feedback (<?= count($feedback) ?>)</a>
     </div>
 
     <?php if ($tab === 'listings'): ?>
@@ -212,6 +222,32 @@ $currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings'
                 <button type="submit" name="save_settings" value="1" class="btn btn-primary">Save Settings</button>
             </form>
         </div></div>
+    <?php elseif ($tab === 'feedback'): ?>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+            <a href="?export=feedback" class="btn btn-outline btn-sm">⬇ Download CSV</a>
+        </div>
+        <?php if (!$feedback): ?>
+            <div class="empty-state"><div class="icon">💬</div><h3>No feedback yet</h3></div>
+        <?php else: ?>
+        <table class="table">
+            <thead><tr><th>From</th><th>Email</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <?php foreach ($feedback as $f): ?>
+                <tr style="<?= $f['is_read'] ? 'opacity:.6' : '' ?>">
+                    <td><?= e($f['name']) ?></td>
+                    <td><?= e($f['email']) ?></td>
+                    <td style="max-width:320px"><?= e($f['message']) ?></td>
+                    <td><?= date('M j, Y', strtotime($f['created_at'])) ?></td>
+                    <td><span class="badge <?= $f['is_read'] ? 'badge-closed' : 'badge-pending' ?>"><?= $f['is_read'] ? 'Read' : 'New' ?></span></td>
+                    <td style="display:flex;gap:.4rem">
+                        <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_feedback_read" value="<?= (int) $f['id'] ?>" class="btn btn-sm btn-outline"><?= $f['is_read'] ? 'Mark Unread' : 'Mark Read' ?></button></form>
+                        <form method="post" onsubmit="return confirm('Delete this feedback?')"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_feedback" value="<?= (int) $f['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button></form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
     <?php else: ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
             <a href="?export=users" class="btn btn-outline btn-sm">⬇ Download CSV</a>

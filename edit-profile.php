@@ -94,13 +94,16 @@ function cleanPhoneInput(el) {
 </head>
 <body>
 <nav class="navbar">
-    <div class="nav-brand">🛍️ <?= e(SITE_NAME) ?></div>
+    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
+        <span class="nav-user">👤 <?= e($user['name']) ?></span>
         <a href="index.php">Browse</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="about.php">About</a>
+        <a href="feedback.php">Feedback</a>
     </div>
 </nav>
 
