@@ -80,11 +80,11 @@ $unreadCount = $unread->fetch()['c'];
                 <td><?= e($l['city'] ?: '—') ?></td>
                 <td><?= (int) $l['views'] ?></td>
                 <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Inactive' ?></span></td>
-                <td style="display:flex;gap:.4rem">
-                    <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
-                    <form method="post" onsubmit="return confirm('Delete this listing?')">
+                <td class="action-row">
+                    <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing">✏️</a>
+                    <form method="post" onsubmit="return confirm('Delete this listing?')" style="display:inline">
                         <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                        <button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Delete</button>
+                        <button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
                     </form>
                 </td>
             </tr>

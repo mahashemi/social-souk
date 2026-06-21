@@ -161,10 +161,10 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
                     <td><?= $l['halal_badge'] ? '✓' : '—' ?></td>
                     <td><?= (int) $l['views'] ?></td>
                     <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Hidden' ?></span></td>
-                    <td style="display:flex;gap:.4rem">
-                        <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
-                        <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline"><?= $l['is_active'] ? 'Hide' : 'Show' ?></button></form>
-                        <form method="post" onsubmit="return confirm('Delete this listing permanently?')"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button></form>
+                    <td class="action-row">
+                        <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing">✏️</a>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_listing" value="<?= (int) $l['id'] ?>" class="icon-btn" data-tip="<?= $l['is_active'] ? 'Hide' : 'Show' ?>" aria-label="<?= $l['is_active'] ? 'Hide' : 'Show' ?>"><?= $l['is_active'] ? '🙈' : '👁️' ?></button></form>
+                        <form method="post" onsubmit="return confirm('Delete this listing permanently?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button></form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -190,14 +190,14 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
                     <td><input type="text" name="icon" form="<?= $fid ?>" value="<?= e($c['icon']) ?>" class="form-control" style="width:70px;padding:.4rem"></td>
                     <td><input type="text" name="name" form="<?= $fid ?>" value="<?= e($c['name']) ?>" class="form-control" style="padding:.4rem"></td>
                     <td><input type="text" name="slug" form="<?= $fid ?>" value="<?= e($c['slug']) ?>" class="form-control" style="padding:.4rem"></td>
-                    <td style="display:flex;gap:.4rem">
+                    <td class="action-row">
                         <form method="post" id="<?= $fid ?>" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="edit_category" value="<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline">Save</button>
+                            <button type="submit" name="edit_category" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Save" aria-label="Save">💾</button>
                         </form>
                         <form method="post" onsubmit="return confirm('Delete this category? Listings using it will become uncategorized.')" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="delete_category" value="<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button>
+                            <button type="submit" name="delete_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
                         </form>
                     </td>
                 </tr>
@@ -239,9 +239,9 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
                     <td style="max-width:320px"><?= e($f['message']) ?></td>
                     <td><?= date('M j, Y', strtotime($f['created_at'])) ?></td>
                     <td><span class="badge <?= $f['is_read'] ? 'badge-closed' : 'badge-pending' ?>"><?= $f['is_read'] ? 'Read' : 'New' ?></span></td>
-                    <td style="display:flex;gap:.4rem">
-                        <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_feedback_read" value="<?= (int) $f['id'] ?>" class="btn btn-sm btn-outline"><?= $f['is_read'] ? 'Mark Unread' : 'Mark Read' ?></button></form>
-                        <form method="post" onsubmit="return confirm('Delete this feedback?')"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_feedback" value="<?= (int) $f['id'] ?>" class="btn btn-sm btn-outline" style="color:#c00;border-color:#c00">Delete</button></form>
+                    <td class="action-row">
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_feedback_read" value="<?= (int) $f['id'] ?>" class="icon-btn" data-tip="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>" aria-label="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>"><?= $f['is_read'] ? '📩' : '✔️' ?></button></form>
+                        <form method="post" onsubmit="return confirm('Delete this feedback?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_feedback" value="<?= (int) $f['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button></form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -263,12 +263,12 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
                     <td><?= e($u['phone'] ?: '—') ?></td>
                     <td><?= $u['is_verified'] ? '✓ Verified' : '—' ?></td>
                     <td><?= date('M j, Y', strtotime($u['created_at'])) ?></td>
-                    <td style="display:flex;gap:.4rem">
-                        <form method="post"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_verify" value="<?= (int) $u['id'] ?>" class="btn btn-sm btn-outline"><?= $u['is_verified'] ? 'Unverify' : 'Verify' ?></button></form>
+                    <td class="action-row">
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_verify" value="<?= (int) $u['id'] ?>" class="icon-btn" data-tip="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>" aria-label="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>"><?= $u['is_verified'] ? '🚫' : '✔️' ?></button></form>
                         <?php if ((int) $u['id'] !== (int) $user['id']): ?>
-                        <form method="post" onsubmit="return confirm('<?= $u['is_admin'] ? 'Remove admin privileges from' : 'Grant admin privileges to' ?> <?= e($u['name']) ?>?')">
+                        <form method="post" onsubmit="return confirm('<?= $u['is_admin'] ? 'Remove admin privileges from' : 'Grant admin privileges to' ?> <?= e($u['name']) ?>?')" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="toggle_admin" value="<?= (int) $u['id'] ?>" class="btn btn-sm btn-outline"><?= $u['is_admin'] ? 'Revoke Admin' : 'Make Admin' ?></button>
+                            <button type="submit" name="toggle_admin" value="<?= (int) $u['id'] ?>" class="icon-btn <?= $u['is_admin'] ? 'icon-btn-danger' : '' ?>" data-tip="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>" aria-label="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>"><?= $u['is_admin'] ? '👑' : '⭐' ?></button>
                         </form>
                         <?php endif; ?>
                     </td>
