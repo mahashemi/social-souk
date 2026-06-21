@@ -35,8 +35,15 @@ SocialSouk combines three things most platforms keep separate:
 | Halal-certified badge on listings | ✅ |
 | Country selector with auto-filled dial code + validated 10-digit phone | ✅ |
 | Admin panel — manage users & listings, grant/revoke admin, export CSV | ✅ |
+| Admin-managed categories (add/edit/delete) — no code changes needed | ✅ |
+| Admin-editable site settings (name, tagline) | ✅ |
 | Image upload for listings (JPG/PNG/WEBP, 5MB max, validated server-side) | ✅ |
+| Mobile-first responsive design — Material Design 3 navigation drawer, card-based tables on small screens | ✅ |
 | Reviews & ratings on completed trades | 🔜 planned |
+
+## Design System
+
+Built on Material Design 3 structural conventions (Roboto type, M3 elevation tiers, 8/12/16px shape scale, modal navigation drawer pattern on mobile) layered on top of the site's own green-and-gold Islamic branding — not Google's default color palette. See `style.css` for the token definitions (`:root`).
 
 ## Project Structure
 
@@ -94,6 +101,8 @@ Visit `/admin.php` while logged in as an admin (`is_admin = 1`) to:
 - View, verify/unverify, and CSV-export all users
 - **Grant or revoke admin privileges** for any other user (you cannot demote yourself)
 - View, edit, hide/show, delete, and CSV-export all listings
+- **Categories tab** — add, edit, or delete listing categories (name, slug, icon) without touching code
+- **Settings tab** — edit the site name and tagline shown across the app
 
 ## Email Verification
 
