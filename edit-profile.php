@@ -102,6 +102,7 @@ function cleanPhoneInput(el) {
         <a href="index.php">Browse</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>

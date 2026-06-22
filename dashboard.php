@@ -43,6 +43,7 @@ $unreadCount = $unread->fetch()['c'];
         <a href="edit-profile.php">Edit Profile</a>
         <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
         <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>

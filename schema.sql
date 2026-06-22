@@ -124,6 +124,145 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (seller_id)   REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ════════════════════════════════════════════════════════════════════════
+-- B2B TRADE — Buyer/Supplier company profiles, products, RFQ marketplace
+-- (Added alongside the existing consumer C2C marketplace above, not a
+-- replacement — a user can have both a personal account and a company.)
+-- ════════════════════════════════════════════════════════════════════════
+
+-- ── Trade role on the user account ────────────────────────────────────────
+ALTER TABLE users ADD COLUMN IF NOT EXISTS trade_role ENUM('none','buyer','supplier','both') NOT NULL DEFAULT 'none';
+
+-- ── B2B Categories (separate from consumer `categories`) ──────────────────
+CREATE TABLE IF NOT EXISTS b2b_categories (
+    id   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    slug VARCHAR(150) NOT NULL UNIQUE,
+    icon VARCHAR(10)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO b2b_categories (name, slug, icon) VALUES
+('Agriculture & Food',              'agriculture-food',     '🌾'),
+('Textiles & Apparel',              'textiles-apparel',     '🧵'),
+('Electronics & Electrical',        'electronics',          '🔌'),
+('Machinery & Industrial Equipment','machinery',            '⚙️'),
+('Construction & Building Materials','construction',        '🏗️'),
+('Health, Beauty & Personal Care',  'health-beauty',        '💊'),
+('Home, Garden & Furniture',        'home-garden',          '🪑'),
+('Packaging & Printing',            'packaging-printing',   '📦'),
+('Automotive & Transportation',     'automotive',           '🚗'),
+('Chemicals & Minerals',            'chemicals-minerals',   '🧪');
+
+-- ── Company Profiles (one per user — the "showroom") ───────────────────────
+CREATE TABLE IF NOT EXISTS companies (
+    id                     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id                INT UNSIGNED NOT NULL,
+    company_name           VARCHAR(200) NOT NULL,
+    role                   ENUM('buyer','supplier','both') NOT NULL DEFAULT 'supplier',
+    business_type          ENUM('manufacturer','trading_company','distributor_wholesaler','retailer','individual') DEFAULT 'manufacturer',
+    year_established       YEAR NULL,
+    employee_count         ENUM('1-10','11-50','51-200','201-500','500+') NULL,
+    country                VARCHAR(100),
+    city                   VARCHAR(100),
+    address                TEXT,
+    main_products          VARCHAR(300),
+    main_export_markets    VARCHAR(300),
+    is_importer            TINYINT(1) DEFAULT 0,
+    is_exporter            TINYINT(1) DEFAULT 0,
+    annual_revenue         ENUM('below_1m','1m_10m','10m_50m','50m_above') NULL,
+    -- Production capacity tab
+    factory_size_sqm       INT UNSIGNED NULL,
+    production_lines       INT UNSIGNED NULL,
+    monthly_output         VARCHAR(150),
+    rd_staff_count         INT UNSIGNED NULL,
+    -- Trade capacity tab
+    nearest_port               VARCHAR(150),
+    accepted_currencies        VARCHAR(150) DEFAULT 'USD',
+    accepted_payment_methods   VARCHAR(200),
+    avg_lead_time_days         INT UNSIGNED NULL,
+    description             TEXT,
+    logo_url                VARCHAR(500),
+    banner_url              VARCHAR(500),
+    business_license_url   VARCHAR(500),
+    verification_status    ENUM('unverified','pending','verified','rejected') NOT NULL DEFAULT 'unverified',
+    verified_at             TIMESTAMP NULL,
+    verified_by             INT UNSIGNED NULL,
+    response_rate           TINYINT UNSIGNED DEFAULT 0,
+    created_at              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at              TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (verified_by) REFERENCES users(id) ON DELETE SET NULL,
+    UNIQUE KEY one_company_per_user (user_id),
+    INDEX idx_verification (verification_status),
+    INDEX idx_role (role)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── Certifications / Trademarks / Patents (Certifications tab) ────────────
+CREATE TABLE IF NOT EXISTS company_certifications (
+    id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    company_id   INT UNSIGNED NOT NULL,
+    name         VARCHAR(200) NOT NULL,
+    issuing_body VARCHAR(200),
+    file_url     VARCHAR(500),
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── B2B Products (separate from consumer `listings`) ───────────────────────
+CREATE TABLE IF NOT EXISTS b2b_products (
+    id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    company_id   INT UNSIGNED NOT NULL,
+    category_id  INT UNSIGNED NULL,
+    title        VARCHAR(200) NOT NULL,
+    description  TEXT,
+    price_min    DECIMAL(12,2) NOT NULL DEFAULT 0,
+    price_max    DECIMAL(12,2) NOT NULL DEFAULT 0,
+    unit         VARCHAR(50) DEFAULT 'piece',
+    moq          INT UNSIGNED NOT NULL DEFAULT 1,
+    image_url    VARCHAR(500),
+    is_active    TINYINT(1) DEFAULT 1,
+    views        INT UNSIGNED DEFAULT 0,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_by   INT UNSIGNED NULL,
+    updated_at   TIMESTAMP NULL,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES b2b_categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_company (company_id),
+    INDEX idx_category (category_id),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── RFQ — Request For Quotation board ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS rfqs (
+    id                   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    buyer_id             INT UNSIGNED NOT NULL,
+    category_id          INT UNSIGNED NULL,
+    product_name         VARCHAR(200) NOT NULL,
+    quantity             INT UNSIGNED NOT NULL,
+    unit                 VARCHAR(50) DEFAULT 'piece',
+    target_price         DECIMAL(12,2) NULL,
+    description          TEXT,
+    destination_country  VARCHAR(100),
+    status               ENUM('open','closed') NOT NULL DEFAULT 'open',
+    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES b2b_categories(id) ON DELETE SET NULL,
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS rfq_quotes (
+    id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    rfq_id       INT UNSIGNED NOT NULL,
+    company_id   INT UNSIGNED NOT NULL,
+    quoted_price DECIMAL(12,2) NOT NULL,
+    message      TEXT,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY one_quote_per_company (rfq_id, company_id),
+    FOREIGN KEY (rfq_id) REFERENCES rfqs(id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ── Feedback / Advice ────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS feedback (
     id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

@@ -34,6 +34,7 @@ if ($q !== '') {
         <a href="index.php">Browse</a>
         <?php if ($user): ?><span class="nav-user">👤 <?= e($user['name']) ?></span><a href="dashboard.php">Dashboard</a><a href="logout.php" class="nav-btn">Logout</a>
         <?php else: ?><a href="login.php" class="nav-btn">Login</a><?php endif; ?>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>

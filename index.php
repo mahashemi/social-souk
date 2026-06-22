@@ -50,6 +50,7 @@ $listings = $stmt->fetchAll();
             <a href="login.php">Login</a>
             <a href="register.php" class="nav-btn">Join Free</a>
         <?php endif; ?>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>

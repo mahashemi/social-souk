@@ -66,6 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare('UPDATE feedback SET is_read = 1 - is_read WHERE id = ?')->execute([(int) $_POST['toggle_feedback_read']]);
     } elseif (isset($_POST['delete_feedback'])) {
         $pdo->prepare('DELETE FROM feedback WHERE id = ?')->execute([(int) $_POST['delete_feedback']]);
+    } elseif (isset($_POST['approve_company'])) {
+        $pdo->prepare("UPDATE companies SET verification_status='verified', verified_at=NOW(), verified_by=? WHERE id=?")
+            ->execute([$user['id'], (int) $_POST['approve_company']]);
+    } elseif (isset($_POST['reject_company'])) {
+        $pdo->prepare("UPDATE companies SET verification_status='rejected' WHERE id=?")->execute([(int) $_POST['reject_company']]);
+    } elseif (isset($_POST['add_b2b_category'])) {
+        $name = trim($_POST['name'] ?? '');
+        $icon = trim($_POST['icon'] ?? '');
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $name));
+        if ($name !== '') {
+            $pdo->prepare('INSERT INTO b2b_categories (name, slug, icon) VALUES (?, ?, ?)')->execute([$name, $slug, $icon]);
+        }
+    } elseif (isset($_POST['delete_b2b_category'])) {
+        $pdo->prepare('DELETE FROM b2b_categories WHERE id = ?')->execute([(int) $_POST['delete_b2b_category']]);
     }
     redirect('admin.php?tab=' . ($_GET['tab'] ?? 'overview'));
 }
@@ -87,6 +101,13 @@ $listings = $pdo->query(
 $categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
 $currentSettings = $pdo->query('SELECT setting_key, setting_value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
 $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetchAll();
+$companies = $pdo->query(
+    "SELECT c.*, u.name AS owner_name, u.email AS owner_email,
+            (SELECT COUNT(*) FROM b2b_products WHERE company_id = c.id) AS product_count
+     FROM companies c JOIN users u ON u.id = c.user_id ORDER BY c.created_at DESC"
+)->fetchAll();
+$pendingCompanies = array_values(array_filter($companies, fn($c) => $c['verification_status'] === 'pending'));
+$b2bCategories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,6 +128,7 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
         <a href="index.php">Site</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>
@@ -143,6 +165,8 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
         <a href="?tab=categories" class="tab-btn <?= $tab === 'categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ Categories (<?= count($categories) ?>)</a>
         <a href="?tab=settings" class="tab-btn <?= $tab === 'settings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">⚙️ Settings</a>
         <a href="?tab=feedback" class="tab-btn <?= $tab === 'feedback' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">💬 Feedback (<?= count($feedback) ?>)</a>
+        <a href="?tab=companies" class="tab-btn <?= $tab === 'companies' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏢 Trade Companies (<?= count($pendingCompanies) ?> pending)</a>
+        <a href="?tab=b2b_categories" class="tab-btn <?= $tab === 'b2b_categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ B2B Categories (<?= count($b2bCategories) ?>)</a>
     </div>
 
     <?php if ($tab === 'listings'): ?>
@@ -248,6 +272,65 @@ $feedback = $pdo->query('SELECT * FROM feedback ORDER BY created_at DESC')->fetc
             </tbody>
         </table>
         <?php endif; ?>
+    <?php elseif ($tab === 'companies'): ?>
+        <p class="section-sub">Companies awaiting review appear first. Approving grants the Verified Supplier badge.</p>
+        <table class="table">
+            <thead><tr><th>Company</th><th>Owner</th><th>Role</th><th>Country</th><th>Products</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <?php foreach ($companies as $c): ?>
+                <tr>
+                    <td><a href="company.php?id=<?= (int) $c['id'] ?>" target="_blank"><?= e($c['company_name']) ?></a></td>
+                    <td><?= e($c['owner_name']) ?> <span style="color:var(--text-light);font-size:.78rem">(<?= e($c['owner_email']) ?>)</span></td>
+                    <td><span class="badge" style="background:#f5f5f5;color:#555"><?= e(ucfirst($c['role'])) ?></span></td>
+                    <td><?= e($c['country'] ?: '—') ?></td>
+                    <td><?= (int) $c['product_count'] ?></td>
+                    <td>
+                        <?php if ($c['verification_status'] === 'verified'): ?><span class="badge-verified">✔ Verified</span>
+                        <?php elseif ($c['verification_status'] === 'pending'): ?><span class="badge-pending-review">⏳ Pending</span>
+                        <?php elseif ($c['verification_status'] === 'rejected'): ?><span class="badge badge-paid">⛔ Rejected</span>
+                        <?php else: ?><span class="badge" style="background:#f5f5f5;color:#888">Unverified</span><?php endif; ?>
+                    </td>
+                    <td class="action-row">
+                        <?php if ($c['business_license_url']): ?><a href="<?= e($c['business_license_url']) ?>" target="_blank" class="icon-btn" data-tip="View license" aria-label="View license">📄</a><?php endif; ?>
+                        <a href="chat.php?with=<?= (int) $c['user_id'] ?>" class="icon-btn" data-tip="Message" aria-label="Message">💬</a>
+                        <?php if ($c['verification_status'] !== 'verified'): ?>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="approve_company" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Approve" aria-label="Approve">✅</button></form>
+                        <?php endif; ?>
+                        <?php if ($c['verification_status'] !== 'rejected'): ?>
+                        <form method="post" onsubmit="return confirm('Reject this company\'s verification?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="reject_company" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Reject" aria-label="Reject">⛔</button></form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php elseif ($tab === 'b2b_categories'): ?>
+        <div class="card" style="margin-bottom:1.5rem"><div class="card-body">
+            <h3 style="font-size:1rem;margin-bottom:1rem">+ Add B2B Category</h3>
+            <form method="post" style="display:grid;grid-template-columns:1fr 100px auto;gap:.6rem;align-items:end">
+                <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                <div class="form-group" style="margin:0"><label class="form-label">Name</label><input type="text" name="name" class="form-control" required></div>
+                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="📦"></div>
+                <button type="submit" name="add_b2b_category" value="1" class="btn btn-primary">+ Add</button>
+            </form>
+        </div></div>
+        <table class="table">
+            <thead><tr><th>Icon</th><th>Name</th><th>Actions</th></tr></thead>
+            <tbody>
+                <?php foreach ($b2bCategories as $c): ?>
+                <tr>
+                    <td><?= e($c['icon']) ?></td>
+                    <td><?= e($c['name']) ?></td>
+                    <td class="action-row">
+                        <form method="post" onsubmit="return confirm('Delete this category? Products using it will become uncategorized.')" style="display:inline">
+                            <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                            <button type="submit" name="delete_b2b_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     <?php else: ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
             <a href="?export=users" class="btn btn-outline btn-sm">⬇ Download CSV</a>

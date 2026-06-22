@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
         <?php else: ?>
             <a href="login.php" class="nav-btn">Login</a>
         <?php endif; ?>
+        <a href="trade.php">Trade</a>
         <a href="about.php">About</a>
         <a href="feedback.php">Feedback</a>
     </div>

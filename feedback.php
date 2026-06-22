@@ -34,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="search.php">Search</a>
         <?php if ($user): ?><span class="nav-user">👤 <?= e($user['name']) ?></span>
             <a href="dashboard.php">Dashboard</a>
-            <a href="about.php">About</a>
+            <a href="trade.php">Trade</a>
+        <a href="about.php">About</a>
             <a href="feedback.php">Feedback</a>
             <a href="logout.php" class="nav-btn">Logout</a>
         <?php else: ?>

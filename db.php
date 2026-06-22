@@ -203,3 +203,27 @@ function handleImageUpload(string $fieldName, string $subDir): ?string {
 
     return 'uploads/' . $subDir . '/' . $filename;
 }
+
+// ── B2B Trade Helpers ───────────────────────────────────────────────────────
+function myCompany(PDO $pdo, int $userId): ?array {
+    $stmt = $pdo->prepare('SELECT * FROM companies WHERE user_id = ?');
+    $stmt->execute([$userId]);
+    $c = $stmt->fetch();
+    return $c ?: null;
+}
+
+function verifiedBadge(string $status): string {
+    if ($status === 'verified') {
+        return '<span class="badge-verified">✔ Verified Supplier</span>';
+    }
+    if ($status === 'pending') {
+        return '<span class="badge-pending-review">⏳ Verification Pending</span>';
+    }
+    return '';
+}
+
+function moneyRange(float $min, float $max): string {
+    if ($min <= 0 && $max <= 0) return 'Price on request';
+    if ($min == $max) return '$' . number_format($min, 2);
+    return '$' . number_format($min, 2) . ' - $' . number_format($max, 2);
+}
