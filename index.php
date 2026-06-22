@@ -5,6 +5,7 @@ $user = auth();
 $catSlug = $_GET['cat'] ?? '';
 
 $categories = $pdo->query('SELECT * FROM categories ORDER BY name')->fetchAll();
+$heroBg = siteSetting($pdo, 'home_hero_bg');
 
 $sql = "SELECT l.*, u.name AS seller_name, c.name AS cat_name, c.icon AS cat_icon
         FROM listings l
@@ -57,7 +58,7 @@ $listings = $stmt->fetchAll();
     </div>
 </nav>
 
-<header class="hero">
+<header class="hero" <?php if ($heroBg): ?>style="background-image:linear-gradient(135deg, rgba(10,61,31,.85), rgba(13,40,24,.85)), url('<?= e($heroBg) ?>');background-size:cover;background-position:center"<?php endif; ?>>
     <div class="hero-content">
         <h1>Trade with <span>Barakah</span></h1>
         <p>The social marketplace for Muslims — buy, sell, chat, and connect with your community. Every listing built on trust and halal values.</p>

@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare('DELETE FROM b2b_categories WHERE id = ?')->execute([(int) $_POST['delete_b2b_category']]);
     } elseif (isset($_POST['upload_site_image'])) {
         $slot = $_POST['upload_site_image'];
-        $allowedSlots = ['trade_hero_bg', 'trade_banner_default'];
+        $allowedSlots = ['home_hero_bg', 'trade_hero_bg', 'trade_banner_default'];
         if (in_array($slot, $allowedSlots, true)) {
             $path = handleImageUpload('image', 'site');
             if ($path) {
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif (isset($_POST['remove_site_image'])) {
         $slot = $_POST['remove_site_image'];
-        $allowedSlots = ['trade_hero_bg', 'trade_banner_default'];
+        $allowedSlots = ['home_hero_bg', 'trade_hero_bg', 'trade_banner_default'];
         if (in_array($slot, $allowedSlots, true)) {
             $pdo->prepare('DELETE FROM settings WHERE setting_key = ?')->execute([$slot]);
         }
@@ -128,7 +128,8 @@ $companies = $pdo->query(
 $pendingCompanies = array_values(array_filter($companies, fn($c) => $c['verification_status'] === 'pending'));
 $b2bCategories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetchAll();
 $siteImageSlots = [
-    'trade_hero_bg'        => ['label' => 'Trade Hero Background', 'hint' => 'Shown behind the headline on the Trade landing page. Recommended: wide image, at least 1600x500.'],
+    'home_hero_bg'         => ['label' => 'Homepage Hero Background', 'hint' => 'Shown behind the "Trade with Barakah" headline on the main homepage (index.php). Recommended: wide image, at least 1600x500.'],
+    'trade_hero_bg'        => ['label' => 'Trade Hero Background', 'hint' => 'Shown behind the headline on the Trade landing page (the B2B section, reached via the "Trade" nav link). Recommended: wide image, at least 1600x500.'],
     'trade_banner_default' => ['label' => 'Default Company Banner', 'hint' => 'Fallback banner shown on a supplier\'s public profile page when they have not uploaded their own. Recommended: 1200x300.'],
 ];
 ?>
