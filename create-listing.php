@@ -49,13 +49,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
-        <span class="nav-user">👤 <?= e($user['name']) ?></span>
         <a href="index.php">Browse</a>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="logout.php" class="nav-btn">Logout</a>
+        <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <a href="about.php">About</a>
-        <a href="feedback.php">Feedback</a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+            <a href="create-listing.php">+ Sell Item</a>
+            <a href="chat.php">Messages</a>
+            <a href="dashboard.php">Dashboard</a>
+            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="logout.php" class="nav-btn">Logout</a>
+        <?php else: ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="login.php">Login</a>
+            <a href="register.php" class="nav-btn">Join Free</a>
+        <?php endif; ?>
     </div>
 </nav>
 

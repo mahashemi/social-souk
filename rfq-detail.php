@@ -77,13 +77,33 @@ if ($myCompany) {
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
+        <a href="index.php">Browse</a>
+        <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <a href="rfq-board.php">RFQ Board</a>
-        <?php if ($user): ?><span class="nav-user">👤 <?= e($user['name']) ?></span><a href="logout.php" class="nav-btn">Logout</a>
-        <?php else: ?><a href="login.php" class="nav-btn">Login</a><?php endif; ?>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+            <a href="create-listing.php">+ Sell Item</a>
+            <a href="chat.php">Messages</a>
+            <a href="dashboard.php">Dashboard</a>
+            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="logout.php" class="nav-btn">Logout</a>
+        <?php else: ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="login.php">Login</a>
+            <a href="register.php" class="nav-btn">Join Free</a>
+        <?php endif; ?>
     </div>
 </nav>
 
+<div class="trade-subnav">
+    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php">❓ How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+</div>
 <div class="container section" style="max-width:760px">
     <?php if (flash('success')): ?><div class="alert alert-success"><?= e(flash('success')) ?></div><?php endif; ?>
     <?php if ($errors): ?><div class="alert alert-error"><?php foreach ($errors as $err): ?><div><?= e($err) ?></div><?php endforeach; ?></div><?php endif; ?>

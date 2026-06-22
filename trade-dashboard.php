@@ -41,14 +41,33 @@ $myRfqs = $myRfqs->fetchAll();
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
-        <span class="nav-user">👤 <?= e($user['name']) ?></span>
+        <a href="index.php">Browse</a>
+        <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <a href="company-setup.php">Edit Company</a>
-        <a href="company.php?id=<?= (int) $company['id'] ?>">Public Profile</a>
-        <a href="logout.php" class="nav-btn">Logout</a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+            <a href="create-listing.php">+ Sell Item</a>
+            <a href="chat.php">Messages</a>
+            <a href="dashboard.php">Dashboard</a>
+            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="logout.php" class="nav-btn">Logout</a>
+        <?php else: ?>
+            <a href="about.php">About</a>
+            <a href="feedback.php">Feedback</a>
+            <a href="login.php">Login</a>
+            <a href="register.php" class="nav-btn">Join Free</a>
+        <?php endif; ?>
     </div>
 </nav>
 
+<div class="trade-subnav">
+    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php">❓ How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+</div>
 <div class="dashboard-wrap">
     <div class="dashboard-header">
         <h2>🏢 <?= e($company['company_name']) ?></h2>

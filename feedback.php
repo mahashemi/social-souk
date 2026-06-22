@@ -32,10 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
-        <?php if ($user): ?><span class="nav-user">👤 <?= e($user['name']) ?></span>
+        <a href="trade.php">Trade</a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+            <a href="create-listing.php">+ Sell Item</a>
+            <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
-            <a href="trade.php">Trade</a>
-        <a href="about.php">About</a>
+            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
+            <a href="about.php">About</a>
             <a href="feedback.php">Feedback</a>
             <a href="logout.php" class="nav-btn">Logout</a>
         <?php else: ?>
