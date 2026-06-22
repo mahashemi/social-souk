@@ -204,6 +204,13 @@ function handleImageUpload(string $fieldName, string $subDir): ?string {
     return 'uploads/' . $subDir . '/' . $filename;
 }
 
+function siteSetting(PDO $pdo, string $key): ?string {
+    $stmt = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
+    $stmt->execute([$key]);
+    $val = $stmt->fetchColumn();
+    return $val !== false && $val !== '' ? $val : null;
+}
+
 // ── B2B Trade Helpers ───────────────────────────────────────────────────────
 function myCompany(PDO $pdo, int $userId): ?array {
     $stmt = $pdo->prepare('SELECT * FROM companies WHERE user_id = ?');

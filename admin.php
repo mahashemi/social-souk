@@ -80,6 +80,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif (isset($_POST['delete_b2b_category'])) {
         $pdo->prepare('DELETE FROM b2b_categories WHERE id = ?')->execute([(int) $_POST['delete_b2b_category']]);
+    } elseif (isset($_POST['upload_site_image'])) {
+        $slot = $_POST['upload_site_image'];
+        $allowedSlots = ['trade_hero_bg', 'trade_banner_default'];
+        if (in_array($slot, $allowedSlots, true)) {
+            $path = handleImageUpload('image', 'site');
+            if ($path) {
+                $pdo->prepare('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?')
+                    ->execute([$slot, $path, $path]);
+                flash('success', 'Image updated.');
+            } else {
+                flash('success', 'Upload failed — please use a JPG, PNG, or WEBP under 5MB.');
+            }
+        }
+    } elseif (isset($_POST['remove_site_image'])) {
+        $slot = $_POST['remove_site_image'];
+        $allowedSlots = ['trade_hero_bg', 'trade_banner_default'];
+        if (in_array($slot, $allowedSlots, true)) {
+            $pdo->prepare('DELETE FROM settings WHERE setting_key = ?')->execute([$slot]);
+        }
     }
     redirect('admin.php?tab=' . ($_GET['tab'] ?? 'overview'));
 }
@@ -108,6 +127,10 @@ $companies = $pdo->query(
 )->fetchAll();
 $pendingCompanies = array_values(array_filter($companies, fn($c) => $c['verification_status'] === 'pending'));
 $b2bCategories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetchAll();
+$siteImageSlots = [
+    'trade_hero_bg'        => ['label' => 'Trade Hero Background', 'hint' => 'Shown behind the headline on the Trade landing page. Recommended: wide image, at least 1600x500.'],
+    'trade_banner_default' => ['label' => 'Default Company Banner', 'hint' => 'Fallback banner shown on a supplier\'s public profile page when they have not uploaded their own. Recommended: 1200x300.'],
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -167,6 +190,7 @@ $b2bCategories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetc
         <a href="?tab=feedback" class="tab-btn <?= $tab === 'feedback' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">💬 Feedback (<?= count($feedback) ?>)</a>
         <a href="?tab=companies" class="tab-btn <?= $tab === 'companies' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏢 Trade Companies (<?= count($pendingCompanies) ?> pending)</a>
         <a href="?tab=b2b_categories" class="tab-btn <?= $tab === 'b2b_categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ B2B Categories (<?= count($b2bCategories) ?>)</a>
+        <a href="?tab=site_images" class="tab-btn <?= $tab === 'site_images' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🖼️ Site Images</a>
     </div>
 
     <?php if ($tab === 'listings'): ?>
@@ -331,6 +355,32 @@ $b2bCategories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetc
                 <?php endforeach; ?>
             </tbody>
         </table>
+    <?php elseif ($tab === 'site_images'): ?>
+        <p class="section-sub" style="margin-bottom:1.5rem">Upload custom images for key Trade sections. If a slot is left empty, a sensible default (a solid color/gradient) is used instead.</p>
+        <div class="grid-2" style="gap:1.5rem">
+            <?php foreach ($siteImageSlots as $slotKey => $slotInfo): $current = siteSetting($pdo, $slotKey); ?>
+            <div class="card"><div class="card-body">
+                <h3 style="font-size:1rem;margin-bottom:.4rem"><?= e($slotInfo['label']) ?></h3>
+                <p style="font-size:.8rem;color:var(--text-light);margin-bottom:1rem"><?= e($slotInfo['hint']) ?></p>
+                <?php if ($current): ?>
+                    <img src="<?= e($current) ?>" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:var(--radius);margin-bottom:1rem">
+                <?php else: ?>
+                    <div style="width:100%;height:140px;border-radius:var(--radius);margin-bottom:1rem;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:.85rem">No image set — using default</div>
+                <?php endif; ?>
+                <form method="post" enctype="multipart/form-data" style="display:flex;gap:.6rem;align-items:center">
+                    <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                    <input type="file" name="image" accept="image/jpeg,image/png,image/webp" required style="flex:1;font-size:.82rem">
+                    <button type="submit" name="upload_site_image" value="<?= e($slotKey) ?>" class="btn btn-primary btn-sm">Upload</button>
+                </form>
+                <?php if ($current): ?>
+                <form method="post" onsubmit="return confirm('Remove this image and revert to the default?')" style="margin-top:.5rem">
+                    <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
+                    <button type="submit" name="remove_site_image" value="<?= e($slotKey) ?>" class="btn btn-outline btn-sm">Remove</button>
+                </form>
+                <?php endif; ?>
+            </div></div>
+            <?php endforeach; ?>
+        </div>
     <?php else: ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
             <a href="?export=users" class="btn btn-outline btn-sm">⬇ Download CSV</a>

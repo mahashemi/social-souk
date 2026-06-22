@@ -4,6 +4,7 @@ $user = auth();
 $myCo = $user ? myCompany($pdo, $user['id']) : null;
 
 $categories = $pdo->query('SELECT * FROM b2b_categories ORDER BY name')->fetchAll();
+$heroBg = siteSetting($pdo, 'trade_hero_bg');
 
 $stats = $pdo->query(
     "SELECT (SELECT COUNT(*) FROM companies WHERE verification_status='verified') AS verified_suppliers,
@@ -66,7 +67,7 @@ $topSuppliers = $pdo->query(
     <a href="trade-how-it-works.php">❓ How It Works</a>
     <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
 </div>
-<header class="trade-hero">
+<header class="trade-hero" <?php if ($heroBg): ?>style="background-image:linear-gradient(135deg, rgba(10,61,31,.85), rgba(13,40,24,.85)), url('<?= e($heroBg) ?>');background-size:cover;background-position:center"<?php endif; ?>>
     <div class="hero-content">
         <h1>Source & Sell <span style="color:var(--gold)">Wholesale</span>, Anywhere</h1>
         <p style="opacity:.9;max-width:560px;margin:0 auto">Verified suppliers and buyers, making it easy to do business anywhere and everywhere — built on trust, halal values, and barakah.</p>

@@ -8,6 +8,7 @@ $tab = $_GET['tab'] ?? 'overview';
 $stmt = $pdo->prepare('SELECT c.*, u.name AS owner_name FROM companies c JOIN users u ON u.id = c.user_id WHERE c.id = ?');
 $stmt->execute([$id]);
 $company = $stmt->fetch();
+$bannerFallback = siteSetting($pdo, 'trade_banner_default');
 
 if (!$company) {
     http_response_code(404);
@@ -70,7 +71,8 @@ $certs = $certs->fetchAll();
     <a href="trade-how-it-works.php">❓ How It Works</a>
     <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
 </div>
-<div style="background:linear-gradient(135deg, var(--green-deep), #0d2818); height:140px;<?= $company['banner_url'] ? 'background-image:url(' . e($company['banner_url']) . ');background-size:cover;background-position:center;' : '' ?>"></div>
+<?php $bannerSrc = $company['banner_url'] ?: $bannerFallback; ?>
+<div style="background:linear-gradient(135deg, var(--green-deep), #0d2818); height:140px;<?= $bannerSrc ? 'background-image:url(' . e($bannerSrc) . ');background-size:cover;background-position:center;' : '' ?>"></div>
 
 <div class="container" style="margin-top:-50px">
     <div class="card" style="padding:1.5rem">
