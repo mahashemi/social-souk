@@ -52,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
 <div class="profile-header">
     <div class="profile-avatar"><?= e(mb_substr($profile['name'], 0, 1)) ?></div>
     <div class="profile-name"><?= e($profile['name']) ?></div>
-    <div class="profile-city">📍 <?= e($profile['city'] ?: 'Location not set') ?></div>
+    <div class="profile-city"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($profile['city'] ?: 'Location not set') ?></div>
     <div class="profile-stats">
         <div class="stat-item"><div class="stat-num"><?= count($listings) ?></div><div class="stat-lbl">Listings</div></div>
         <div class="stat-item"><div class="stat-num"><?= (int) $followerCount ?></div><div class="stat-lbl">Followers</div></div>
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
         <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
         <input type="hidden" name="toggle_follow" value="1">
         <button type="submit" class="btn <?= $isFollowing ? 'btn-secondary' : 'btn-primary' ?>">
-            <?= $isFollowing ? '✓ Following' : '+ Follow' ?>
+            <?= $isFollowing ? '<i data-lucide="check" class="lucide-icon"></i> Following' : '+ Follow' ?>
         </button>
     </form>
     <?php endif; ?>
@@ -100,12 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
     <h2 class="section-title"><?= e($profile['name']) ?>'s <span>Listings</span></h2>
 
     <?php if (!$listings): ?>
-        <div class="empty-state"><div class="icon">📭</div><h3>No active listings</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="inbox" class="lucide-icon"></i></div><h3>No active listings</h3></div>
     <?php else: ?>
     <div class="grid-4">
         <?php foreach ($listings as $l): ?>
         <a href="listing.php?id=<?= (int) $l['id'] ?>" class="card">
-            <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= e($l['cat_icon'] ?: '📦') ?><?php endif; ?></div>
+            <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= catIcon($l['cat_icon']) ?><?php endif; ?></div>
             <div class="card-body">
                 <div class="card-title"><?= e($l['title']) ?></div>
                 <div class="card-price"><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free / Swap' ?></div>
@@ -115,6 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
     </div>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

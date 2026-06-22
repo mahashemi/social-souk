@@ -45,14 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
 
     <div class="card">
         <div class="card-img" style="height:280px;font-size:5rem">
-            <?php if ($listing['image_url']): ?><img src="<?= e($listing['image_url']) ?>" alt=""><?php else: ?><?= e($listing['cat_icon'] ?: '📦') ?><?php endif; ?>
+            <?php if ($listing['image_url']): ?><img src="<?= e($listing['image_url']) ?>" alt=""><?php else: ?><?= catIcon($listing['cat_icon']) ?><?php endif; ?>
         </div>
         <div class="card-body">
             <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:1rem">
@@ -82,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
                     <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap">
                         <h1 style="font-size:1.5rem;margin-bottom:.4rem"><?= e($listing['title']) ?></h1>
                         <?php if ($user && ($user['id'] == $listing['seller_id'] || !empty($user['is_admin']))): ?>
-                            <a href="edit-listing.php?id=<?= $id ?>" class="btn btn-sm btn-outline">✏️ Edit</a>
+                            <a href="edit-listing.php?id=<?= $id ?>" class="btn btn-sm btn-outline"><i data-lucide="pencil" class="lucide-icon"></i> Edit</a>
                         <?php endif; ?>
                     </div>
                     <div class="card-meta">
-                        <span>📍 <?= e($listing['city'] ?: 'N/A') ?></span>
-                        <span>👁️ <?= (int) $listing['views'] ?> views</span>
-                        <?php if ($listing['halal_badge']): ?><span class="halal-badge">✓ Halal</span><?php endif; ?>
+                        <span><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($listing['city'] ?: 'N/A') ?></span>
+                        <span><i data-lucide="eye" class="lucide-icon"></i> <?= (int) $listing['views'] ?> views</span>
+                        <?php if ($listing['halal_badge']): ?><span class="halal-badge"><i data-lucide="check" class="lucide-icon"></i> Halal</span><?php endif; ?>
                     </div>
                     <?php if ($listing['editor_name']): ?>
                         <div style="font-size:.78rem;color:var(--text-light);margin-top:.3rem">
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
                 </div>
                 <div>
                     <a href="profile.php?id=<?= (int) $listing['seller_id'] ?>" style="font-weight:600;color:var(--text)"><?= e($listing['seller_name']) ?></a>
-                    <div style="font-size:.82rem;color:var(--text-light)">📍 <?= e($listing['seller_city'] ?: 'N/A') ?></div>
+                    <div style="font-size:.82rem;color:var(--text-light)"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($listing['seller_city'] ?: 'N/A') ?></div>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
                     <label class="form-label">Message the seller</label>
                     <textarea name="message_body" class="form-control" placeholder="Hi, is this still available?" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-green">💬 Send Message</button>
+                <button type="submit" class="btn btn-green"><i data-lucide="message-circle" class="lucide-icon"></i> Send Message</button>
             </form>
         </div>
         <?php elseif (!$user): ?>
@@ -139,6 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_body'])) {
         <?php endif; ?>
     </div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

@@ -204,6 +204,10 @@ function handleImageUpload(string $fieldName, string $subDir): ?string {
     return 'uploads/' . $subDir . '/' . $filename;
 }
 
+function catIcon(?string $iconName): string {
+    return '<i data-lucide="' . e($iconName ?: 'package') . '" class="lucide-icon"></i>';
+}
+
 function siteSetting(PDO $pdo, string $key): ?string {
     $stmt = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key = ?');
     $stmt->execute([$key]);
@@ -221,7 +225,7 @@ function myCompany(PDO $pdo, int $userId): ?array {
 
 function verifiedBadge(string $status): string {
     if ($status === 'verified') {
-        return '<span class="badge-verified">✔ Verified Supplier</span>';
+        return '<span class="badge-verified"><i data-lucide="check" class="lucide-icon"></i> Verified Supplier</span>';
     }
     if ($status === 'pending') {
         return '<span class="badge-pending-review">⏳ Verification Pending</span>';

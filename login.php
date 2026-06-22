@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrap">
     <div class="auth-box">
         <div class="auth-logo">
-            <h2>🛍️ <?= e(SITE_NAME) ?></h2>
+            <h2><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></h2>
             <p><?= e(SITE_TAGLINE) ?></p>
         </div>
 
@@ -75,9 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             NEW TO <?= e(mb_strtoupper(SITE_NAME)) ?>?
             <div style="flex:1;border-top:1px solid var(--border)"></div>
         </div>
-        <a href="register.php" class="btn btn-outline btn-full">✨ Create a Free Account</a>
+        <a href="register.php" class="btn btn-outline btn-full"><i data-lucide="sparkles" class="lucide-icon"></i> Create a Free Account</a>
     </div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

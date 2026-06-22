@@ -37,14 +37,14 @@ $myRfqs = $myRfqs->fetchAll();
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -62,15 +62,15 @@ $myRfqs = $myRfqs->fetchAll();
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="dashboard-wrap">
     <div class="dashboard-header">
-        <h2>🏢 <?= e($company['company_name']) ?></h2>
+        <h2><i data-lucide="building-2" class="lucide-icon"></i> <?= e($company['company_name']) ?></h2>
         <p>Trade Dashboard</p>
         <?= verifiedBadge($company['verification_status']) ?>
     </div>
@@ -83,7 +83,7 @@ $myRfqs = $myRfqs->fetchAll();
         <a href="add-trade-product.php" class="btn btn-primary btn-sm">+ List Product</a>
     </div>
     <?php if (!$products): ?>
-        <div class="empty-state"><div class="icon">📦</div><h3>No products listed yet</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="package" class="lucide-icon"></i></div><h3>No products listed yet</h3></div>
     <?php else: ?>
     <table class="table" style="margin-bottom:2rem">
         <thead><tr><th>Title</th><th>Category</th><th>Price</th><th>MOQ</th><th>Views</th><th>Status</th><th></th></tr></thead>
@@ -97,7 +97,7 @@ $myRfqs = $myRfqs->fetchAll();
                 <td data-label="Views"><?= (int) $p['views'] ?></td>
                 <td data-label="Status"><span class="badge <?= $p['is_active'] ? 'badge-free' : 'badge-paid' ?>"><?= $p['is_active'] ? 'Active' : 'Inactive' ?></span></td>
                 <td data-label="Actions" class="action-row">
-                    <a href="edit-trade-product.php?id=<?= (int) $p['id'] ?>" class="icon-btn" data-tip="Edit" aria-label="Edit">✏️</a>
+                    <a href="edit-trade-product.php?id=<?= (int) $p['id'] ?>" class="icon-btn" data-tip="Edit" aria-label="Edit"><i data-lucide="pencil" class="lucide-icon"></i></a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -107,7 +107,7 @@ $myRfqs = $myRfqs->fetchAll();
 
     <h3 style="font-size:1.1rem;color:var(--green-deep);margin-bottom:1rem">My Quotes Submitted (<?= count($myQuotes) ?>)</h3>
     <?php if (!$myQuotes): ?>
-        <div class="empty-state"><div class="icon">📋</div><h3>No quotes submitted yet</h3><p><a href="rfq-board.php" class="btn btn-primary" style="margin-top:1rem">Browse Open Requests</a></p></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="clipboard-list" class="lucide-icon"></i></div><h3>No quotes submitted yet</h3><p><a href="rfq-board.php" class="btn btn-primary" style="margin-top:1rem">Browse Open Requests</a></p></div>
     <?php else: ?>
     <table class="table" style="margin-bottom:2rem">
         <thead><tr><th>Request</th><th>Quantity</th><th>My Quote</th><th>RFQ Status</th></tr></thead>
@@ -131,7 +131,7 @@ $myRfqs = $myRfqs->fetchAll();
         <a href="rfq-submit.php" class="btn btn-primary btn-sm">+ Post Request</a>
     </div>
     <?php if (!$myRfqs): ?>
-        <div class="empty-state"><div class="icon">📋</div><h3>You haven't posted any requests yet</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="clipboard-list" class="lucide-icon"></i></div><h3>You haven't posted any requests yet</h3></div>
     <?php else: ?>
     <table class="table">
         <thead><tr><th>Product</th><th>Quantity</th><th>Quotes Received</th><th>Status</th><th></th></tr></thead>
@@ -142,7 +142,7 @@ $myRfqs = $myRfqs->fetchAll();
                 <td data-label="Quantity"><?= (int) $r['quantity'] ?> <?= e($r['unit']) ?></td>
                 <td data-label="Quotes Received"><?= (int) $r['quote_count'] ?></td>
                 <td data-label="Status"><span class="badge <?= $r['status']==='open'?'badge-active':'badge-closed' ?>"><?= e(ucfirst($r['status'])) ?></span></td>
-                <td data-label="Actions"><a href="rfq-detail.php?id=<?= (int) $r['id'] ?>" class="icon-btn" data-tip="View" aria-label="View">👁️</a></td>
+                <td data-label="Actions"><a href="rfq-detail.php?id=<?= (int) $r['id'] ?>" class="icon-btn" data-tip="View" aria-label="View"><i data-lucide="eye" class="lucide-icon"></i></a></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -150,6 +150,8 @@ $myRfqs = $myRfqs->fetchAll();
     <?php endif; ?>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

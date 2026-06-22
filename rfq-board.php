@@ -29,14 +29,14 @@ $rfqs = $stmt->fetchAll();
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -54,11 +54,11 @@ $rfqs = $stmt->fetchAll();
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="container section">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
@@ -70,23 +70,23 @@ $rfqs = $stmt->fetchAll();
     </div>
 
     <div class="chip-row">
-        <a href="rfq-board.php" class="cat-chip <?= !$categoryId ? 'active' : '' ?>">🌐 All Categories</a>
+        <a href="rfq-board.php" class="cat-chip <?= !$categoryId ? 'active' : '' ?>"><i data-lucide="globe" class="lucide-icon"></i> All Categories</a>
         <?php foreach ($categories as $c): ?>
-            <a href="?category=<?= (int) $c['id'] ?>" class="cat-chip <?= $categoryId === (int) $c['id'] ? 'active' : '' ?>"><?= e($c['icon']) ?> <?= e($c['name']) ?></a>
+            <a href="?category=<?= (int) $c['id'] ?>" class="cat-chip <?= $categoryId === (int) $c['id'] ? 'active' : '' ?>"><?= catIcon($c['icon']) ?> <?= e($c['name']) ?></a>
         <?php endforeach; ?>
     </div>
 
     <?php if (!$rfqs): ?>
-        <div class="empty-state"><div class="icon">📋</div><h3>No open requests right now</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="clipboard-list" class="lucide-icon"></i></div><h3>No open requests right now</h3></div>
     <?php else: ?>
     <div class="grid-2">
         <?php foreach ($rfqs as $r): ?>
         <a href="rfq-detail.php?id=<?= (int) $r['id'] ?>" class="rfq-card" style="text-decoration:none;color:inherit;display:block">
-            <div class="rfq-card-title"><?= e($r['cat_icon'] ?: '📋') ?> <?= e($r['product_name']) ?></div>
+            <div class="rfq-card-title"><?= catIcon($r['cat_icon'] ?: 'clipboard-list') ?> <?= e($r['product_name']) ?></div>
             <div class="rfq-card-meta">
-                <span>📦 Qty: <?= (int) $r['quantity'] ?> <?= e($r['unit']) ?></span>
-                <?php if ($r['target_price']): ?><span>💰 Target: $<?= number_format((float) $r['target_price'], 2) ?></span><?php endif; ?>
-                <?php if ($r['destination_country']): ?><span>📍 <?= e($r['destination_country']) ?></span><?php endif; ?>
+                <span><i data-lucide="package" class="lucide-icon"></i> Qty: <?= (int) $r['quantity'] ?> <?= e($r['unit']) ?></span>
+                <?php if ($r['target_price']): ?><span><i data-lucide="circle-dollar-sign" class="lucide-icon"></i> Target: $<?= number_format((float) $r['target_price'], 2) ?></span><?php endif; ?>
+                <?php if ($r['destination_country']): ?><span><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($r['destination_country']) ?></span><?php endif; ?>
             </div>
             <p style="font-size:.85rem;color:var(--text-mid);margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden"><?= e($r['description']) ?></p>
             <div style="display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--text-light)">
@@ -98,6 +98,8 @@ $rfqs = $stmt->fetchAll();
     </div>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

@@ -40,14 +40,14 @@ $certs = $certs->fetchAll();
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -65,11 +65,11 @@ $certs = $certs->fetchAll();
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <?php $bannerSrc = $company['banner_url'] ?: $bannerFallback; ?>
 <div style="background:linear-gradient(135deg, var(--green-deep), #0d2818); height:140px;<?= $bannerSrc ? 'background-image:url(' . e($bannerSrc) . ');background-size:cover;background-position:center;' : '' ?>"></div>
@@ -85,14 +85,14 @@ $certs = $certs->fetchAll();
                 <div style="display:flex;gap:.6rem;align-items:center;margin:.4rem 0;flex-wrap:wrap">
                     <?= verifiedBadge($company['verification_status']) ?>
                     <span class="badge" style="background:#f5f5f5;color:#555"><?= e(ucfirst(str_replace('_', ' ', $company['business_type']))) ?></span>
-                    <span style="font-size:.85rem;color:var(--text-light)">📍 <?= e($company['city'] ? $company['city'] . ', ' : '') . e($company['country']) ?></span>
+                    <span style="font-size:.85rem;color:var(--text-light)"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($company['city'] ? $company['city'] . ', ' : '') . e($company['country']) ?></span>
                 </div>
                 <p style="color:var(--text-mid);font-size:.9rem;max-width:600px"><?= e($company['main_products'] ?: 'No main products listed yet.') ?></p>
             </div>
             <?php if ($isOwner): ?>
-                <a href="company-setup.php" class="btn btn-outline btn-sm">✏️ Edit Profile</a>
+                <a href="company-setup.php" class="btn btn-outline btn-sm"><i data-lucide="pencil" class="lucide-icon"></i> Edit Profile</a>
             <?php elseif ($user): ?>
-                <a href="chat.php?with=<?= (int) $company['user_id'] ?>" class="btn btn-primary btn-sm">💬 Contact Supplier</a>
+                <a href="chat.php?with=<?= (int) $company['user_id'] ?>" class="btn btn-primary btn-sm"><i data-lucide="message-circle" class="lucide-icon"></i> Contact Supplier</a>
             <?php endif; ?>
         </div>
     </div>
@@ -118,13 +118,13 @@ $certs = $certs->fetchAll();
         </div></div>
     <?php elseif ($tab === 'products'): ?>
         <?php if (!$products): ?>
-            <div class="empty-state"><div class="icon">📦</div><h3>No products listed yet</h3></div>
+            <div class="empty-state"><div class="icon"><i data-lucide="package" class="lucide-icon"></i></div><h3>No products listed yet</h3></div>
         <?php else: ?>
         <div class="grid-3">
             <?php foreach ($products as $p): ?>
             <a href="trade-product.php?id=<?= (int) $p['id'] ?>" class="b2b-product-card" style="text-decoration:none;color:inherit">
                 <div class="b2b-product-img">
-                    <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= e($p['cat_icon'] ?: '📦') ?><?php endif; ?>
+                    <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= catIcon($p['cat_icon']) ?><?php endif; ?>
                 </div>
                 <div class="b2b-product-body">
                     <div class="b2b-product-title"><?= e($p['title']) ?></div>
@@ -159,7 +159,7 @@ $certs = $certs->fetchAll();
         </div></div>
     <?php elseif ($tab === 'certifications'): ?>
         <?php if (!$certs): ?>
-            <div class="empty-state"><div class="icon">📜</div><h3>No certifications listed yet</h3></div>
+            <div class="empty-state"><div class="icon"><i data-lucide="scroll-text" class="lucide-icon"></i></div><h3>No certifications listed yet</h3></div>
         <?php else: ?>
             <?php foreach ($certs as $c): ?>
             <div class="card" style="margin-bottom:.8rem"><div class="card-body" style="display:flex;justify-content:space-between;align-items:center">
@@ -173,8 +173,10 @@ $certs = $certs->fetchAll();
 </div>
 
 <footer>
-    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with ❤️ for the Ummah.</div>
+    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with <i data-lucide="heart" class="lucide-icon"></i> for the Ummah.</div>
 </footer>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

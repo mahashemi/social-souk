@@ -76,11 +76,11 @@ function chatTime(string $dt): string {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
-        <a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
         <a href="index.php">Browse</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
@@ -95,7 +95,7 @@ function chatTime(string $dt): string {
         <div class="chat-list">
             <div class="chat-list-header">Messages</div>
             <?php if (!$conversations): ?>
-                <div class="chat-empty-list">💬<br>No conversations yet.<br>Message a seller from a listing page to start chatting.</div>
+                <div class="chat-empty-list"><i data-lucide="message-circle" class="lucide-icon"></i><br>No conversations yet.<br>Message a seller from a listing page to start chatting.</div>
             <?php endif; ?>
             <?php foreach ($conversations as $c): ?>
                 <a href="chat.php?with=<?= (int) $c['id'] ?>" class="chat-list-item <?= $c['id'] == $withId ? 'active' : '' ?>" style="text-decoration:none;color:inherit">
@@ -117,11 +117,11 @@ function chatTime(string $dt): string {
         <div class="chat-main">
             <?php if (!$activeUser): ?>
                 <div class="chat-empty-thread">
-                    <div><div class="icon">💬</div>Select a conversation to start chatting</div>
+                    <div><div class="icon"><i data-lucide="message-circle" class="lucide-icon"></i></div>Select a conversation to start chatting</div>
                 </div>
             <?php else: ?>
                 <div class="chat-header">
-                    <button class="chat-back" onclick="location.href='chat.php'" aria-label="Back to conversations">←</button>
+                    <button class="chat-back" onclick="location.href='chat.php'" aria-label="Back to conversations"><i data-lucide="arrow-left" class="lucide-icon"></i></button>
                     <div class="chat-avatar"><?= e(mb_substr($activeUser['name'], 0, 1)) ?></div>
                     <div>
                         <div class="chat-header-name"><?= e($activeUser['name']) ?></div>
@@ -143,7 +143,7 @@ function chatTime(string $dt): string {
                 <form method="post" class="chat-input-bar" id="chatForm">
                     <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
                     <textarea name="body" id="chatBody" class="chat-input" rows="1" placeholder="Type a message..." required autocomplete="off"></textarea>
-                    <button type="submit" class="chat-send-btn" aria-label="Send">➤</button>
+                    <button type="submit" class="chat-send-btn" aria-label="Send"><i data-lucide="send" class="lucide-icon"></i></button>
                 </form>
             <?php endif; ?>
         </div>
@@ -171,6 +171,8 @@ function chatTime(string $dt): string {
     }
 })();
 </script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

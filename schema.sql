@@ -44,20 +44,21 @@ CREATE TABLE IF NOT EXISTS categories (
     id    INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name  VARCHAR(100) NOT NULL,
     slug  VARCHAR(100) NOT NULL UNIQUE,
-    icon  VARCHAR(10)
+    icon  VARCHAR(30)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- icon = a Lucide (https://lucide.dev) icon name, rendered via <i data-lucide="...">
 INSERT INTO categories (name, slug, icon) VALUES
-('Books & Quran',        'books',      '📖'),
-('Clothing & Hijab',     'clothing',   '👘'),
-('Prayer Items',         'prayer',     '🕌'),
-('Halal Food & Dates',   'food',       '🥗'),
-('Fragrances & Oud',     'fragrance',  '🌹'),
-('Electronics',          'electronics','📱'),
-('Home & Decor',         'home',       '🏠'),
-('Vehicles',             'vehicles',   '🚗'),
-('Services',             'services',   '🛠️'),
-('Other / Misc',         'other',      '📦');
+('Books & Quran',        'books',      'book-open'),
+('Clothing & Hijab',     'clothing',   'shirt'),
+('Prayer Items',         'prayer',     'moon-star'),
+('Halal Food & Dates',   'food',       'utensils'),
+('Fragrances & Oud',     'fragrance',  'droplet'),
+('Electronics',          'electronics','monitor-smartphone'),
+('Home & Decor',         'home',       'sofa'),
+('Vehicles',             'vehicles',   'car'),
+('Services',             'services',   'wrench'),
+('Other / Misc',         'other',      'package');
 
 -- ── Listings (Products for sale) ──────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS listings (
@@ -132,26 +133,28 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 -- ── Trade role on the user account ────────────────────────────────────────
 ALTER TABLE users ADD COLUMN IF NOT EXISTS trade_role ENUM('none','buyer','supplier','both') NOT NULL DEFAULT 'none';
+ALTER TABLE categories MODIFY icon VARCHAR(30);
 
 -- ── B2B Categories (separate from consumer `categories`) ──────────────────
 CREATE TABLE IF NOT EXISTS b2b_categories (
     id   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     slug VARCHAR(150) NOT NULL UNIQUE,
-    icon VARCHAR(10)
+    icon VARCHAR(30)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- icon = a Lucide (https://lucide.dev) icon name, rendered via <i data-lucide="...">
 INSERT INTO b2b_categories (name, slug, icon) VALUES
-('Agriculture & Food',              'agriculture-food',     '🌾'),
-('Textiles & Apparel',              'textiles-apparel',     '🧵'),
-('Electronics & Electrical',        'electronics',          '🔌'),
-('Machinery & Industrial Equipment','machinery',            '⚙️'),
-('Construction & Building Materials','construction',        '🏗️'),
-('Health, Beauty & Personal Care',  'health-beauty',        '💊'),
-('Home, Garden & Furniture',        'home-garden',          '🪑'),
-('Packaging & Printing',            'packaging-printing',   '📦'),
-('Automotive & Transportation',     'automotive',           '🚗'),
-('Chemicals & Minerals',            'chemicals-minerals',   '🧪');
+('Agriculture & Food',              'agriculture-food',     'wheat'),
+('Textiles & Apparel',              'textiles-apparel',     'shirt'),
+('Electronics & Electrical',        'electronics',          'cpu'),
+('Machinery & Industrial Equipment','machinery',            'cog'),
+('Construction & Building Materials','construction',        'hard-hat'),
+('Health, Beauty & Personal Care',  'health-beauty',        'heart-pulse'),
+('Home, Garden & Furniture',        'home-garden',          'sofa'),
+('Packaging & Printing',            'packaging-printing',   'package'),
+('Automotive & Transportation',     'automotive',           'truck'),
+('Chemicals & Minerals',            'chemicals-minerals',   'flask-conical');
 
 -- ── Company Profiles (one per user — the "showroom") ───────────────────────
 CREATE TABLE IF NOT EXISTS companies (

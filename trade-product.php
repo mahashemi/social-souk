@@ -33,14 +33,14 @@ $isOwner = $user && (int) $product['owner_id'] === (int) $user['id'];
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -58,26 +58,26 @@ $isOwner = $user && (int) $product['owner_id'] === (int) $user['id'];
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="container section">
     <div class="grid-2" style="grid-template-columns:1fr 1fr;align-items:start">
         <div class="card">
             <div class="b2b-product-img" style="height:340px;font-size:5rem">
-                <?php if ($product['image_url']): ?><img src="<?= e($product['image_url']) ?>" alt=""><?php else: ?><?= e($product['cat_icon'] ?: '📦') ?><?php endif; ?>
+                <?php if ($product['image_url']): ?><img src="<?= e($product['image_url']) ?>" alt=""><?php else: ?><?= catIcon($product['cat_icon']) ?><?php endif; ?>
             </div>
         </div>
         <div>
-            <?php if ($product['cat_name']): ?><div style="font-size:.8rem;color:var(--text-light);margin-bottom:.4rem"><?= e($product['cat_icon']) ?> <?= e($product['cat_name']) ?></div><?php endif; ?>
+            <?php if ($product['cat_name']): ?><div style="font-size:.8rem;color:var(--text-light);margin-bottom:.4rem"><?= catIcon($product['cat_icon']) ?> <?= e($product['cat_name']) ?></div><?php endif; ?>
             <h1 style="font-size:1.5rem;margin-bottom:.6rem"><?= e($product['title']) ?></h1>
             <div class="b2b-product-price" style="font-size:1.6rem;margin-bottom:.8rem"><?= moneyRange((float) $product['price_min'], (float) $product['price_max']) ?> <span style="font-size:.9rem;color:var(--text-light)">/ <?= e($product['unit']) ?></span></div>
             <div style="display:flex;gap:1rem;margin-bottom:1.2rem;font-size:.88rem;color:var(--text-mid)">
                 <span><strong>MOQ:</strong> <?= (int) $product['moq'] ?> <?= e($product['unit']) ?></span>
-                <span><strong>👁️ Views:</strong> <?= (int) $product['views'] ?></span>
+                <span><strong><i data-lucide="eye" class="lucide-icon"></i> Views:</strong> <?= (int) $product['views'] ?></span>
             </div>
             <p style="color:var(--text-mid);margin-bottom:1.5rem;line-height:1.6"><?= nl2br(e($product['description'])) ?></p>
 
@@ -88,22 +88,24 @@ $isOwner = $user && (int) $product['owner_id'] === (int) $user['id'];
                     </div>
                     <div style="flex:1">
                         <a href="company.php?id=<?= (int) $product['company_id'] ?>" style="font-weight:700"><?= e($product['company_name']) ?></a>
-                        <div style="font-size:.78rem;color:var(--text-light)">📍 <?= e($product['city'] ? $product['city'] . ', ' : '') . e($product['country']) ?></div>
+                        <div style="font-size:.78rem;color:var(--text-light)"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($product['city'] ? $product['city'] . ', ' : '') . e($product['country']) ?></div>
                     </div>
                     <?= verifiedBadge($product['verification_status']) ?>
                 </div>
             </div>
 
             <?php if ($isOwner): ?>
-                <a href="edit-trade-product.php?id=<?= (int) $product['id'] ?>" class="btn btn-outline btn-full">✏️ Edit Product</a>
+                <a href="edit-trade-product.php?id=<?= (int) $product['id'] ?>" class="btn btn-outline btn-full"><i data-lucide="pencil" class="lucide-icon"></i> Edit Product</a>
             <?php elseif ($user): ?>
-                <a href="chat.php?with=<?= (int) $product['owner_id'] ?>" class="btn btn-primary btn-full">💬 Contact Supplier</a>
+                <a href="chat.php?with=<?= (int) $product['owner_id'] ?>" class="btn btn-primary btn-full"><i data-lucide="message-circle" class="lucide-icon"></i> Contact Supplier</a>
             <?php else: ?>
                 <a href="login.php" class="btn btn-primary btn-full">Login to Contact Supplier</a>
             <?php endif; ?>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

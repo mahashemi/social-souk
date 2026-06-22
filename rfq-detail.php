@@ -73,14 +73,14 @@ if ($myCompany) {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -98,22 +98,22 @@ if ($myCompany) {
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="container section" style="max-width:760px">
     <?php if (flash('success')): ?><div class="alert alert-success"><?= e(flash('success')) ?></div><?php endif; ?>
     <?php if ($errors): ?><div class="alert alert-error"><?php foreach ($errors as $err): ?><div><?= e($err) ?></div><?php endforeach; ?></div><?php endif; ?>
 
     <div class="rfq-card" style="margin-bottom:1.5rem">
-        <div class="rfq-card-title"><?= e($rfq['cat_icon'] ?: '📋') ?> <?= e($rfq['product_name']) ?></div>
+        <div class="rfq-card-title"><?= catIcon($rfq['cat_icon'] ?: 'clipboard-list') ?> <?= e($rfq['product_name']) ?></div>
         <div class="rfq-card-meta">
-            <span>📦 Qty: <?= (int) $rfq['quantity'] ?> <?= e($rfq['unit']) ?></span>
-            <?php if ($rfq['target_price']): ?><span>💰 Target: $<?= number_format((float) $rfq['target_price'], 2) ?></span><?php endif; ?>
-            <?php if ($rfq['destination_country']): ?><span>📍 <?= e($rfq['destination_country']) ?></span><?php endif; ?>
+            <span><i data-lucide="package" class="lucide-icon"></i> Qty: <?= (int) $rfq['quantity'] ?> <?= e($rfq['unit']) ?></span>
+            <?php if ($rfq['target_price']): ?><span><i data-lucide="circle-dollar-sign" class="lucide-icon"></i> Target: $<?= number_format((float) $rfq['target_price'], 2) ?></span><?php endif; ?>
+            <?php if ($rfq['destination_country']): ?><span><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($rfq['destination_country']) ?></span><?php endif; ?>
             <span class="badge <?= $rfq['status']==='open'?'badge-active':'badge-closed' ?>"><?= e(ucfirst($rfq['status'])) ?></span>
         </div>
         <p style="color:var(--text-mid);margin:.8rem 0"><?= nl2br(e($rfq['description'])) ?></p>
@@ -145,7 +145,7 @@ if ($myCompany) {
     <?php if ($isBuyer): ?>
         <h3 style="font-size:1.1rem;color:var(--green-deep);margin-bottom:1rem">Quotes Received (<?= count($quotes) ?>)</h3>
         <?php if (!$quotes): ?>
-            <div class="empty-state"><div class="icon">📭</div><h3>No quotes yet</h3></div>
+            <div class="empty-state"><div class="icon"><i data-lucide="inbox" class="lucide-icon"></i></div><h3>No quotes yet</h3></div>
         <?php else: ?>
             <?php foreach ($quotes as $q): ?>
             <div class="rfq-quote-item">
@@ -155,14 +155,16 @@ if ($myCompany) {
                 </div>
                 <div style="font-size:1.2rem;font-weight:700;color:var(--green-deep);margin-bottom:.4rem">$<?= number_format((float) $q['quoted_price'], 2) ?></div>
                 <p style="font-size:.88rem;color:var(--text-mid);margin-bottom:.6rem"><?= e($q['message']) ?></p>
-                <a href="chat.php?with=<?= (int) $q['supplier_user_id'] ?>" class="btn btn-sm btn-outline">💬 Message Supplier</a>
+                <a href="chat.php?with=<?= (int) $q['supplier_user_id'] ?>" class="btn btn-sm btn-outline"><i data-lucide="message-circle" class="lucide-icon"></i> Message Supplier</a>
             </div>
             <?php endforeach; ?>
         <?php endif; ?>
     <?php elseif ($myQuote): ?>
-        <div class="alert alert-success">✓ You submitted a quote of $<?= number_format((float) $myQuote['quoted_price'], 2) ?> for this request.</div>
+        <div class="alert alert-success"><i data-lucide="check" class="lucide-icon"></i> You submitted a quote of $<?= number_format((float) $myQuote['quoted_price'], 2) ?> for this request.</div>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

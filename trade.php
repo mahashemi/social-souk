@@ -36,14 +36,14 @@ $topSuppliers = $pdo->query(
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -61,11 +61,11 @@ $topSuppliers = $pdo->query(
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <header class="trade-hero" <?php if ($heroBg): ?>style="background-image:linear-gradient(135deg, rgba(10,61,31,.85), rgba(13,40,24,.85)), url('<?= e($heroBg) ?>');background-size:cover;background-position:center"<?php endif; ?>>
     <div class="hero-content">
@@ -76,10 +76,10 @@ $topSuppliers = $pdo->query(
             <button type="submit">Search</button>
         </form>
         <div class="trade-trust-bar">
-            <span>✔️ <?= (int) $stats['verified_suppliers'] ?> Verified Suppliers</span>
-            <span>📦 <?= (int) $stats['total_products'] ?> Products Listed</span>
-            <span>📋 <?= (int) $stats['open_rfqs'] ?> Open RFQs (Requests for Quotation)</span>
-            <span>🛡️ Admin-Reviewed Suppliers</span>
+            <span><i data-lucide="badge-check" class="lucide-icon"></i> <?= (int) $stats['verified_suppliers'] ?> Verified Suppliers</span>
+            <span><i data-lucide="package" class="lucide-icon"></i> <?= (int) $stats['total_products'] ?> Products Listed</span>
+            <span><i data-lucide="clipboard-list" class="lucide-icon"></i> <?= (int) $stats['open_rfqs'] ?> Open RFQs (Requests for Quotation)</span>
+            <span><i data-lucide="shield-check" class="lucide-icon"></i> Admin-Reviewed Suppliers</span>
         </div>
         <?php if (!$myCo): ?>
         <div style="margin-top:1.5rem">
@@ -95,7 +95,7 @@ $topSuppliers = $pdo->query(
     <div class="trade-category-grid">
         <?php foreach ($categories as $c): ?>
         <a href="trade-products.php?category=<?= (int) $c['id'] ?>" class="trade-category-tile">
-            <span class="icon"><?= e($c['icon']) ?></span>
+            <span class="icon"><?= catIcon($c['icon']) ?></span>
             <span class="name"><?= e($c['name']) ?></span>
         </a>
         <?php endforeach; ?>
@@ -106,13 +106,13 @@ $topSuppliers = $pdo->query(
 <div class="container section" style="padding-top:0">
     <div style="display:flex;justify-content:space-between;align-items:baseline">
         <h2 class="section-title">Featured <span>Products</span></h2>
-        <a href="trade-products.php" class="chip-view-all">View All →</a>
+        <a href="trade-products.php" class="chip-view-all">View All <i data-lucide="arrow-right" class="lucide-icon"></i></a>
     </div>
     <div class="grid-4">
         <?php foreach ($featured as $p): ?>
         <a href="trade-product.php?id=<?= (int) $p['id'] ?>" class="b2b-product-card" style="text-decoration:none;color:inherit">
             <div class="b2b-product-img">
-                <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= e($p['cat_icon'] ?: '📦') ?><?php endif; ?>
+                <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= catIcon($p['cat_icon']) ?><?php endif; ?>
             </div>
             <div class="b2b-product-body">
                 <div class="b2b-product-title"><?= e($p['title']) ?></div>
@@ -121,7 +121,7 @@ $topSuppliers = $pdo->query(
             </div>
             <div class="b2b-product-footer">
                 <span><?= e($p['company_name']) ?></span>
-                <?php if ($p['verification_status'] === 'verified'): ?><span>✔️</span><?php endif; ?>
+                <?php if ($p['verification_status'] === 'verified'): ?><span><i data-lucide="badge-check" class="lucide-icon"></i></span><?php endif; ?>
             </div>
         </a>
         <?php endforeach; ?>
@@ -141,7 +141,7 @@ $topSuppliers = $pdo->query(
                 </div>
                 <div>
                     <div class="company-card-name"><?= e($c['company_name']) ?></div>
-                    <div class="company-card-meta">📍 <?= e($c['country']) ?> · <?= (int) $c['product_count'] ?> products</div>
+                    <div class="company-card-meta"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($c['country']) ?> · <?= (int) $c['product_count'] ?> products</div>
                 </div>
             </div>
             <?= verifiedBadge($c['verification_status']) ?>
@@ -154,17 +154,17 @@ $topSuppliers = $pdo->query(
 <div class="container section">
     <div class="grid-3">
         <div class="card"><div class="card-body" style="text-align:center">
-            <div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>
+            <div style="font-size:2rem;margin-bottom:.5rem"><i data-lucide="shield-check" class="lucide-icon"></i></div>
             <h3 style="font-size:1rem;margin-bottom:.4rem">Admin-Verified Suppliers</h3>
             <p style="font-size:.85rem;color:var(--text-mid)">Every Verified Supplier badge means our team has reviewed real business documents — not just a self-declared claim.</p>
         </div></div>
         <div class="card"><div class="card-body" style="text-align:center">
-            <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+            <div style="font-size:2rem;margin-bottom:.5rem"><i data-lucide="clipboard-list" class="lucide-icon"></i></div>
             <h3 style="font-size:1rem;margin-bottom:.4rem">Request for Quotation</h3>
             <p style="font-size:.85rem;color:var(--text-mid)">Post exactly what you need and let suppliers compete for your business with real quotes.</p>
         </div></div>
         <div class="card"><div class="card-body" style="text-align:center">
-            <div style="font-size:2rem;margin-bottom:.5rem">🤝</div>
+            <div style="font-size:2rem;margin-bottom:.5rem"><i data-lucide="handshake" class="lucide-icon"></i></div>
             <h3 style="font-size:1rem;margin-bottom:.4rem">Trade with Barakah</h3>
             <p style="font-size:.85rem;color:var(--text-mid)">Built on the same halal values and trust as the rest of SocialSouk — for the global Muslim trading community.</p>
         </div></div>
@@ -172,8 +172,10 @@ $topSuppliers = $pdo->query(
 </div>
 
 <footer>
-    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?> Trade. Built with ❤️ for the Ummah.</div>
+    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?> Trade. Built with <i data-lucide="heart" class="lucide-icon"></i> for the Ummah.</div>
 </footer>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

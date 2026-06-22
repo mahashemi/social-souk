@@ -13,14 +13,14 @@ $user = auth();
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -40,11 +40,11 @@ $user = auth();
 <section class="mission-band">
     <div class="mission-grid">
         <div>
-            <h3>🎯 Our Vision</h3>
+            <h3><i data-lucide="target" class="lucide-icon"></i> Our Vision</h3>
             <p>To be the world's leading Islamic social commerce platform — a trusted digital space where Muslims across the globe trade, connect, and build community in harmony with their faith.</p>
         </div>
         <div>
-            <h3>🌍 Our Mission</h3>
+            <h3><i data-lucide="globe" class="lucide-icon"></i> Our Mission</h3>
             <p>SocialSouk combines the connectivity of social media with the functionality of a marketplace, empowering Muslims to buy, sell, and chat in an environment built on halal values, transparency, and brotherhood (ukhuwwah).</p>
         </div>
     </div>
@@ -54,15 +54,15 @@ $user = auth();
     <h2 class="section-title">What Makes Us <span>Different</span></h2>
     <div class="grid-3">
         <div class="card"><div class="card-body">
-            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)">🕌 Halal by Design</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)"><i data-lucide="shield-check" class="lucide-icon"></i> Halal by Design</h3>
             <p style="color:var(--text-mid);font-size:.92rem">Every listing can carry a halal-certified badge, and the platform itself is built around Islamic values of fairness and transparency.</p>
         </div></div>
         <div class="card"><div class="card-body">
-            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)">🤝 Trust First</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)"><i data-lucide="handshake" class="lucide-icon"></i> Trust First</h3>
             <p style="color:var(--text-mid);font-size:.92rem">Public seller profiles, follower counts, and direct chat mean you know who you're trading with before you commit.</p>
         </div></div>
         <div class="card"><div class="card-body">
-            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)">🌍 Built for the Ummah</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:.5rem;color:var(--green-deep)"><i data-lucide="globe" class="lucide-icon"></i> Built for the Ummah</h3>
             <p style="color:var(--text-mid);font-size:.92rem">From books and modest clothing to halal food and home goods — every category reflects what our community actually needs.</p>
         </div></div>
     </div>
@@ -73,8 +73,10 @@ $user = auth();
 </div>
 
 <footer>
-    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with ❤️ for the Ummah.</div>
+    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with <i data-lucide="heart" class="lucide-icon"></i> for the Ummah.</div>
 </footer>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

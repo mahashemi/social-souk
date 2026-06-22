@@ -41,14 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -66,11 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="container section" style="max-width:680px">
     <h2 class="section-title">Join <span>SocialSouk Trade</span></h2>
@@ -89,19 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
                     <label class="card" style="cursor:pointer;text-align:center;padding:1.2rem .6rem;margin:0">
                         <input type="radio" name="role" value="buyer" style="width:auto;margin-bottom:.5rem" required>
-                        <div style="font-size:1.6rem">🛒</div>
+                        <div style="font-size:1.6rem"><i data-lucide="shopping-cart" class="lucide-icon"></i></div>
                         <div style="font-weight:600;font-size:.88rem">Buyer</div>
                         <div style="font-size:.75rem;color:var(--text-light)">Source products</div>
                     </label>
                     <label class="card" style="cursor:pointer;text-align:center;padding:1.2rem .6rem;margin:0">
                         <input type="radio" name="role" value="supplier" style="width:auto;margin-bottom:.5rem">
-                        <div style="font-size:1.6rem">🏭</div>
+                        <div style="font-size:1.6rem"><i data-lucide="factory" class="lucide-icon"></i></div>
                         <div style="font-weight:600;font-size:.88rem">Supplier</div>
                         <div style="font-size:.75rem;color:var(--text-light)">Sell wholesale</div>
                     </label>
                     <label class="card" style="cursor:pointer;text-align:center;padding:1.2rem .6rem;margin:0">
                         <input type="radio" name="role" value="both" style="width:auto;margin-bottom:.5rem">
-                        <div style="font-size:1.6rem">🔄</div>
+                        <div style="font-size:1.6rem"><i data-lucide="repeat" class="lucide-icon"></i></div>
                         <div style="font-weight:600;font-size:.88rem">Both</div>
                         <div style="font-size:.75rem;color:var(--text-light)">Buy & sell</div>
                     </label>
@@ -138,6 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div></div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

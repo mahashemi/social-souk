@@ -27,14 +27,14 @@ if ($q !== '') {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -59,25 +59,27 @@ if ($q !== '') {
     </form>
 
     <?php if ($q === ''): ?>
-        <div class="empty-state"><div class="icon">🔍</div><h3>Type something to search listings</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="search" class="lucide-icon"></i></div><h3>Type something to search listings</h3></div>
     <?php elseif (!$listings): ?>
-        <div class="empty-state"><div class="icon">📭</div><h3>No results for "<?= e($q) ?>"</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="inbox" class="lucide-icon"></i></div><h3>No results for "<?= e($q) ?>"</h3></div>
     <?php else: ?>
         <p class="section-sub"><?= count($listings) ?> result(s) for "<?= e($q) ?>"</p>
         <div class="grid-4">
             <?php foreach ($listings as $l): ?>
             <a href="listing.php?id=<?= (int) $l['id'] ?>" class="card">
-                <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= e($l['cat_icon'] ?: '📦') ?><?php endif; ?></div>
+                <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= catIcon($l['cat_icon']) ?><?php endif; ?></div>
                 <div class="card-body">
                     <div class="card-title"><?= e($l['title']) ?></div>
                     <div class="card-price"><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free / Swap' ?></div>
-                    <div class="card-meta"><span>📍 <?= e($l['city'] ?: 'N/A') ?></span></div>
+                    <div class="card-meta"><span><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($l['city'] ?: 'N/A') ?></span></div>
                 </div>
             </a>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

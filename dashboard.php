@@ -32,14 +32,14 @@ $unreadCount = $unread->fetch()['c'];
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -58,7 +58,7 @@ $unreadCount = $unread->fetch()['c'];
 
 <div class="dashboard-wrap">
     <div class="dashboard-header">
-        <h2>👋 Welcome back, <?= e($user['name']) ?></h2>
+        <h2>Welcome back, <?= e($user['name']) ?></h2>
         <p>Manage your listings and track activity.</p>
     </div>
 
@@ -71,7 +71,7 @@ $unreadCount = $unread->fetch()['c'];
 
     <?php if (!$myListings): ?>
         <div class="empty-state">
-            <div class="icon">📦</div>
+            <div class="icon"><i data-lucide="package" class="lucide-icon"></i></div>
             <h3>You haven't posted anything yet</h3>
             <p>Start selling — post your first listing now.</p>
         </div>
@@ -83,16 +83,16 @@ $unreadCount = $unread->fetch()['c'];
         <tbody>
             <?php foreach ($myListings as $l): ?>
             <tr>
-                <td><a href="listing.php?id=<?= (int) $l['id'] ?>"><?= e($l['cat_icon'] ?: '📦') ?> <?= e($l['title']) ?></a></td>
+                <td><a href="listing.php?id=<?= (int) $l['id'] ?>"><?= catIcon($l['cat_icon']) ?> <?= e($l['title']) ?></a></td>
                 <td><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
                 <td><?= e($l['city'] ?: '—') ?></td>
                 <td><?= (int) $l['views'] ?></td>
                 <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Inactive' ?></span></td>
                 <td class="action-row">
-                    <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing">✏️</a>
+                    <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing"><i data-lucide="pencil" class="lucide-icon"></i></a>
                     <form method="post" onsubmit="return confirm('Delete this listing?')" style="display:inline">
                         <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                        <button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
+                        <button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete"><i data-lucide="trash-2" class="lucide-icon"></i></button>
                     </form>
                 </td>
             </tr>
@@ -101,6 +101,8 @@ $unreadCount = $unread->fetch()['c'];
     </table>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

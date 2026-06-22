@@ -85,7 +85,7 @@ function cleanPhoneInput(el) {
 <div class="auth-wrap">
     <div class="auth-box">
         <div class="auth-logo">
-            <h2>🛍️ <?= e(SITE_NAME) ?></h2>
+            <h2><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></h2>
             <p><?= e(SITE_TAGLINE) ?></p>
         </div>
 
@@ -148,6 +148,8 @@ function cleanPhoneInput(el) {
         </p>
     </div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

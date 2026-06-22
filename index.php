@@ -33,14 +33,14 @@ $listings = $stmt->fetchAll();
 <body>
 
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -76,11 +76,11 @@ $listings = $stmt->fetchAll();
 <section class="mission-band">
     <div class="mission-grid">
         <div>
-            <h3>🎯 Our Vision</h3>
+            <h3><i data-lucide="target" class="lucide-icon"></i> Our Vision</h3>
             <p>To be the world's leading Islamic social commerce platform — a trusted digital space where Muslims across the globe trade, connect, and build community in harmony with their faith.</p>
         </div>
         <div>
-            <h3>🌍 Our Mission</h3>
+            <h3><i data-lucide="globe" class="lucide-icon"></i> Our Mission</h3>
             <p>SocialSouk combines the connectivity of social media with the functionality of a marketplace, empowering Muslims to buy, sell, and chat in an environment built on halal values, transparency, and brotherhood (ukhuwwah).</p>
         </div>
     </div>
@@ -97,10 +97,10 @@ $listings = $stmt->fetchAll();
 <div class="container" id="listings" style="padding-top:3rem">
     <h2 class="section-title">Shop by <span>Category</span></h2>
     <div class="chip-row">
-        <a href="index.php" class="cat-chip <?= $catSlug === '' ? 'active' : '' ?>">🛒 All</a>
+        <a href="index.php" class="cat-chip <?= $catSlug === '' ? 'active' : '' ?>"><i data-lucide="shopping-cart" class="lucide-icon"></i> All</a>
         <?php foreach ($categories as $c): ?>
             <a href="?cat=<?= e($c['slug']) ?>" class="cat-chip <?= $catSlug === $c['slug'] ? 'active' : '' ?>">
-                <?= e($c['icon']) ?> <?= e($c['name']) ?>
+                <?= catIcon($c['icon']) ?> <?= e($c['name']) ?>
             </a>
         <?php endforeach; ?>
     </div>
@@ -112,7 +112,7 @@ $listings = $stmt->fetchAll();
 
     <?php if (!$listings): ?>
         <div class="empty-state">
-            <div class="icon">📭</div>
+            <div class="icon"><i data-lucide="inbox" class="lucide-icon"></i></div>
             <h3>No listings yet in this category</h3>
             <p>Be the first to post something here.</p>
         </div>
@@ -120,15 +120,15 @@ $listings = $stmt->fetchAll();
     <div class="grid-4">
         <?php foreach ($listings as $l): ?>
         <a href="listing.php?id=<?= (int) $l['id'] ?>" class="card">
-            <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= e($l['cat_icon'] ?: '📦') ?><?php endif; ?></div>
+            <div class="card-img"><?php if ($l['image_url']): ?><img src="<?= e($l['image_url']) ?>" alt=""><?php else: ?><?= catIcon($l['cat_icon']) ?><?php endif; ?></div>
             <div class="card-body">
                 <div class="card-title"><?= e($l['title']) ?></div>
                 <div class="card-price">
                     <?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free / Swap' ?>
                 </div>
                 <div class="card-meta">
-                    <span>📍 <?= e($l['city'] ?: 'N/A') ?></span>
-                    <?php if ($l['halal_badge']): ?><span class="halal-badge">✓ Halal</span><?php endif; ?>
+                    <span><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($l['city'] ?: 'N/A') ?></span>
+                    <?php if ($l['halal_badge']): ?><span class="halal-badge"><i data-lucide="check" class="lucide-icon"></i> Halal</span><?php endif; ?>
                 </div>
             </div>
         </a>
@@ -140,7 +140,7 @@ $listings = $stmt->fetchAll();
 <footer>
     <div class="footer-grid">
         <div>
-            <div class="footer-brand">🛍️ <?= e(SITE_NAME) ?></div>
+            <div class="footer-brand"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></div>
             <p>Trade with Barakah. A halal social marketplace built for the Ummah.</p>
         </div>
         <div>
@@ -160,9 +160,11 @@ $listings = $stmt->fetchAll();
             </ul>
         </div>
     </div>
-    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with ❤️ for the Ummah.</div>
+    <div class="footer-bottom">&copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. Built with <i data-lucide="heart" class="lucide-icon"></i> for the Ummah.</div>
 </footer>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

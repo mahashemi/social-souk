@@ -30,14 +30,14 @@ $products = $stmt->fetchAll();
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -55,11 +55,11 @@ $products = $stmt->fetchAll();
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="container section">
     <h2 class="section-title">Browse <span>Products</span></h2>
@@ -71,22 +71,22 @@ $products = $stmt->fetchAll();
     </form>
 
     <div class="chip-row">
-        <a href="trade-products.php<?= $q ? '?q=' . urlencode($q) : '' ?>" class="cat-chip <?= !$categoryId ? 'active' : '' ?>">🌐 All Categories</a>
+        <a href="trade-products.php<?= $q ? '?q=' . urlencode($q) : '' ?>" class="cat-chip <?= !$categoryId ? 'active' : '' ?>"><i data-lucide="globe" class="lucide-icon"></i> All Categories</a>
         <?php foreach ($categories as $c): ?>
-            <a href="?category=<?= (int) $c['id'] ?><?= $q ? '&q=' . urlencode($q) : '' ?>" class="cat-chip <?= $categoryId === (int) $c['id'] ? 'active' : '' ?>"><?= e($c['icon']) ?> <?= e($c['name']) ?></a>
+            <a href="?category=<?= (int) $c['id'] ?><?= $q ? '&q=' . urlencode($q) : '' ?>" class="cat-chip <?= $categoryId === (int) $c['id'] ? 'active' : '' ?>"><?= catIcon($c['icon']) ?> <?= e($c['name']) ?></a>
         <?php endforeach; ?>
     </div>
 
     <p class="section-sub"><?= count($products) ?> product(s) found</p>
 
     <?php if (!$products): ?>
-        <div class="empty-state"><div class="icon">📦</div><h3>No products found</h3></div>
+        <div class="empty-state"><div class="icon"><i data-lucide="package" class="lucide-icon"></i></div><h3>No products found</h3></div>
     <?php else: ?>
     <div class="grid-3">
         <?php foreach ($products as $p): ?>
         <a href="trade-product.php?id=<?= (int) $p['id'] ?>" class="b2b-product-card" style="text-decoration:none;color:inherit">
             <div class="b2b-product-img">
-                <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= e($p['cat_icon'] ?: '📦') ?><?php endif; ?>
+                <?php if ($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" alt=""><?php else: ?><?= catIcon($p['cat_icon']) ?><?php endif; ?>
             </div>
             <div class="b2b-product-body">
                 <div class="b2b-product-title"><?= e($p['title']) ?></div>
@@ -95,14 +95,16 @@ $products = $stmt->fetchAll();
             </div>
             <div class="b2b-product-footer">
                 <span><?= e($p['company_name']) ?></span>
-                <?php if ($p['verification_status'] === 'verified'): ?><span title="Verified Supplier">✔️</span><?php endif; ?>
-                <span style="margin-left:auto">📍 <?= e($p['country']) ?></span>
+                <?php if ($p['verification_status'] === 'verified'): ?><span title="Verified Supplier"><i data-lucide="badge-check" class="lucide-icon"></i></span><?php endif; ?>
+                <span style="margin-left:auto"><i data-lucide="map-pin" class="lucide-icon"></i> <?= e($p['country']) ?></span>
             </div>
         </a>
         <?php endforeach; ?>
     </div>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

@@ -101,14 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cert'])) {
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
             <a href="dashboard.php">Dashboard</a>
@@ -126,15 +126,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cert'])) {
 </nav>
 
 <div class="trade-subnav">
-    <a href="trade.php">🏪 Trade Home</a><span class="sep">|</span>
-    <a href="trade-products.php">📦 Browse Products</a><span class="sep">|</span>
-    <a href="rfq-board.php">📋 RFQ (Request for Quotation) Board</a><span class="sep">|</span>
-    <a href="trade-how-it-works.php">❓ How It Works</a>
-    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php">🏢 My Trade Dashboard</a><?php endif; ?>
+    <a href="trade.php"><i data-lucide="store" class="lucide-icon"></i> Trade Home</a><span class="sep">|</span>
+    <a href="trade-products.php"><i data-lucide="package" class="lucide-icon"></i> Browse Products</a><span class="sep">|</span>
+    <a href="rfq-board.php"><i data-lucide="clipboard-list" class="lucide-icon"></i> RFQ (Request for Quotation) Board</a><span class="sep">|</span>
+    <a href="trade-how-it-works.php"><i data-lucide="circle-help" class="lucide-icon"></i> How It Works</a>
+    <?php if ($user): ?><span class="sep">|</span><a href="trade-dashboard.php"><i data-lucide="building-2" class="lucide-icon"></i> My Trade Dashboard</a><?php endif; ?>
 </div>
 <div class="dashboard-wrap" style="max-width:760px">
     <div class="dashboard-header">
-        <h2>🏢 Company Profile</h2>
+        <h2><i data-lucide="building-2" class="lucide-icon"></i> Company Profile</h2>
         <p><?= e($company['company_name']) ?></p>
         <?= verifiedBadge($company['verification_status']) ?>
     </div>
@@ -143,9 +143,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cert'])) {
     <?php if ($errors): ?><div class="alert alert-error"><?php foreach ($errors as $err): ?><div><?= e($err) ?></div><?php endforeach; ?></div><?php endif; ?>
 
     <?php if ($company['verification_status'] === 'unverified'): ?>
-        <div class="alert alert-info">📋 Upload your business license below to submit your company for admin verification and earn the <strong>Verified Supplier</strong> badge.</div>
+        <div class="alert alert-info"><i data-lucide="clipboard-list" class="lucide-icon"></i> Upload your business license below to submit your company for admin verification and earn the <strong>Verified Supplier</strong> badge.</div>
     <?php elseif ($company['verification_status'] === 'rejected'): ?>
-        <div class="alert alert-error">⛔ Your verification was rejected. Please review your documents and re-upload your business license.</div>
+        <div class="alert alert-error"><i data-lucide="ban" class="lucide-icon"></i> Your verification was rejected. Please review your documents and re-upload your business license.</div>
     <?php endif; ?>
 
     <form method="post" enctype="multipart/form-data">
@@ -300,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cert'])) {
             <div class="form-group">
                 <label class="form-label">Business License / Registration Document</label>
                 <input type="file" name="business_license" class="form-control" accept="image/*,.pdf">
-                <div class="form-hint"><?= $company['business_license_url'] ? '✓ A document is already on file.' : 'No document uploaded yet.' ?> Uploading a new one will submit your company for admin review.</div>
+                <div class="form-hint"><?= $company['business_license_url'] ? '<i data-lucide="check" class="lucide-icon"></i> A document is already on file.' : 'No document uploaded yet.' ?> Uploading a new one will submit your company for admin review.</div>
             </div>
         </div></div>
 
@@ -328,6 +328,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cert'])) {
         <?php endif; ?>
     </div></div>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

@@ -143,11 +143,11 @@ $siteImageSlots = [
 </head>
 <body>
 <nav class="navbar">
-    <a class="nav-brand" href="index.php">🛍️ <?= e(SITE_NAME) ?> <small style="color:var(--gold);font-size:.7rem">ADMIN</small></a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <a class="nav-brand" href="index.php"><i data-lucide="shopping-bag" class="lucide-icon"></i> <?= e(SITE_NAME) ?> <small style="color:var(--gold);font-size:.7rem">ADMIN</small></a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu"><i data-lucide="menu" class="lucide-icon"></i></button>
     <div class="nav-scrim" onclick="toggleNav()"></div>
     <div class="nav-links">
-        <a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user">👤 <?= e($user['name']) ?></a>
+        <a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
         <a href="index.php">Site</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="logout.php" class="nav-btn">Logout</a>
@@ -159,7 +159,7 @@ $siteImageSlots = [
 
 <div class="dashboard-wrap" style="max-width:1100px">
     <div class="dashboard-header">
-        <h2>🛠️ Admin Panel</h2>
+        <h2><i data-lucide="wrench" class="lucide-icon"></i> Admin Panel</h2>
         <p>Manage users, listings, and review platform activity.</p>
     </div>
 
@@ -183,19 +183,19 @@ $siteImageSlots = [
     </div>
 
     <div class="tabs">
-        <a href="?tab=users" class="tab-btn <?= $tab === 'users' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">👥 Users (<?= count($users) ?>)</a>
-        <a href="?tab=listings" class="tab-btn <?= $tab === 'listings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">📦 Listings (<?= count($listings) ?>)</a>
-        <a href="?tab=categories" class="tab-btn <?= $tab === 'categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ Categories (<?= count($categories) ?>)</a>
-        <a href="?tab=settings" class="tab-btn <?= $tab === 'settings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">⚙️ Settings</a>
-        <a href="?tab=feedback" class="tab-btn <?= $tab === 'feedback' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">💬 Feedback (<?= count($feedback) ?>)</a>
-        <a href="?tab=companies" class="tab-btn <?= $tab === 'companies' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏢 Trade Companies (<?= count($pendingCompanies) ?> pending)</a>
-        <a href="?tab=b2b_categories" class="tab-btn <?= $tab === 'b2b_categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🏷️ B2B Categories (<?= count($b2bCategories) ?>)</a>
-        <a href="?tab=site_images" class="tab-btn <?= $tab === 'site_images' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center">🖼️ Site Images</a>
+        <a href="?tab=users" class="tab-btn <?= $tab === 'users' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="users" class="lucide-icon"></i> Users (<?= count($users) ?>)</a>
+        <a href="?tab=listings" class="tab-btn <?= $tab === 'listings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="package" class="lucide-icon"></i> Listings (<?= count($listings) ?>)</a>
+        <a href="?tab=categories" class="tab-btn <?= $tab === 'categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="tag" class="lucide-icon"></i> Categories (<?= count($categories) ?>)</a>
+        <a href="?tab=settings" class="tab-btn <?= $tab === 'settings' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="settings" class="lucide-icon"></i> Settings</a>
+        <a href="?tab=feedback" class="tab-btn <?= $tab === 'feedback' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="message-circle" class="lucide-icon"></i> Feedback (<?= count($feedback) ?>)</a>
+        <a href="?tab=companies" class="tab-btn <?= $tab === 'companies' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="building-2" class="lucide-icon"></i> Trade Companies (<?= count($pendingCompanies) ?> pending)</a>
+        <a href="?tab=b2b_categories" class="tab-btn <?= $tab === 'b2b_categories' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="tag" class="lucide-icon"></i> B2B Categories (<?= count($b2bCategories) ?>)</a>
+        <a href="?tab=site_images" class="tab-btn <?= $tab === 'site_images' ? 'active' : '' ?>" style="text-decoration:none;display:block;text-align:center"><i data-lucide="image" class="lucide-icon"></i> Site Images</a>
     </div>
 
     <?php if ($tab === 'listings'): ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-            <a href="?export=listings" class="btn btn-outline btn-sm">⬇ Download CSV</a>
+            <a href="?export=listings" class="btn btn-outline btn-sm"><i data-lucide="download" class="lucide-icon"></i> Download CSV</a>
         </div>
         <table class="table">
             <thead><tr><th>Title</th><th>Seller</th><th>Price</th><th>City</th><th>Halal</th><th>Views</th><th>Status</th><th>Actions</th></tr></thead>
@@ -206,13 +206,13 @@ $siteImageSlots = [
                     <td><?= e($l['seller_name']) ?></td>
                     <td><?= $l['price'] > 0 ? '$' . number_format((float) $l['price']) : 'Free/Swap' ?></td>
                     <td><?= e($l['city'] ?: '—') ?></td>
-                    <td><?= $l['halal_badge'] ? '✓' : '—' ?></td>
+                    <td><?= $l['halal_badge'] ? '<i data-lucide="check" class="lucide-icon"></i>' : '—' ?></td>
                     <td><?= (int) $l['views'] ?></td>
                     <td><span class="badge <?= $l['is_active'] ? 'badge-active' : 'badge-closed' ?>"><?= $l['is_active'] ? 'Active' : 'Hidden' ?></span></td>
                     <td class="action-row">
-                        <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing">✏️</a>
-                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_listing" value="<?= (int) $l['id'] ?>" class="icon-btn" data-tip="<?= $l['is_active'] ? 'Hide' : 'Show' ?>" aria-label="<?= $l['is_active'] ? 'Hide' : 'Show' ?>"><?= $l['is_active'] ? '🙈' : '👁️' ?></button></form>
-                        <form method="post" onsubmit="return confirm('Delete this listing permanently?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button></form>
+                        <a href="edit-listing.php?id=<?= (int) $l['id'] ?>" class="icon-btn" data-tip="Edit listing" aria-label="Edit listing"><i data-lucide="pencil" class="lucide-icon"></i></a>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_listing" value="<?= (int) $l['id'] ?>" class="icon-btn" data-tip="<?= $l['is_active'] ? 'Hide' : 'Show' ?>" aria-label="<?= $l['is_active'] ? 'Hide' : 'Show' ?>"><?= $l['is_active'] ? '<i data-lucide="eye-off" class="lucide-icon"></i>' : '<i data-lucide="eye" class="lucide-icon"></i>' ?></button></form>
+                        <form method="post" onsubmit="return confirm('Delete this listing permanently?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_listing" value="<?= (int) $l['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete"><i data-lucide="trash-2" class="lucide-icon"></i></button></form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -221,11 +221,12 @@ $siteImageSlots = [
     <?php elseif ($tab === 'categories'): ?>
         <div class="card" style="margin-bottom:1.5rem"><div class="card-body">
             <h3 style="font-size:1rem;margin-bottom:1rem">+ Add New Category</h3>
+            <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.8rem">Icon must be a name from <a href="https://lucide.dev/icons" target="_blank" rel="noopener">lucide.dev/icons</a> (e.g. "package", "shirt", "book-open").</p>
             <form method="post" style="display:grid;grid-template-columns:1fr 1fr 100px auto;gap:.6rem;align-items:end">
                 <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
                 <div class="form-group" style="margin:0"><label class="form-label">Name</label><input type="text" name="name" class="form-control" required></div>
                 <div class="form-group" style="margin:0"><label class="form-label">Slug (optional)</label><input type="text" name="slug" class="form-control" placeholder="auto-generated"></div>
-                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="📦"></div>
+                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="e.g. package"></div>
                 <button type="submit" name="add_category" value="1" class="btn btn-primary">+ Add</button>
             </form>
         </div></div>
@@ -241,11 +242,11 @@ $siteImageSlots = [
                     <td class="action-row">
                         <form method="post" id="<?= $fid ?>" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="edit_category" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Save" aria-label="Save">💾</button>
+                            <button type="submit" name="edit_category" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Save" aria-label="Save"><i data-lucide="save" class="lucide-icon"></i></button>
                         </form>
                         <form method="post" onsubmit="return confirm('Delete this category? Listings using it will become uncategorized.')" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="delete_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
+                            <button type="submit" name="delete_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete"><i data-lucide="trash-2" class="lucide-icon"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -272,10 +273,10 @@ $siteImageSlots = [
         </div></div>
     <?php elseif ($tab === 'feedback'): ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-            <a href="?export=feedback" class="btn btn-outline btn-sm">⬇ Download CSV</a>
+            <a href="?export=feedback" class="btn btn-outline btn-sm"><i data-lucide="download" class="lucide-icon"></i> Download CSV</a>
         </div>
         <?php if (!$feedback): ?>
-            <div class="empty-state"><div class="icon">💬</div><h3>No feedback yet</h3></div>
+            <div class="empty-state"><div class="icon"><i data-lucide="message-circle" class="lucide-icon"></i></div><h3>No feedback yet</h3></div>
         <?php else: ?>
         <table class="table">
             <thead><tr><th>From</th><th>Email</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
@@ -288,8 +289,8 @@ $siteImageSlots = [
                     <td><?= date('M j, Y', strtotime($f['created_at'])) ?></td>
                     <td><span class="badge <?= $f['is_read'] ? 'badge-closed' : 'badge-pending' ?>"><?= $f['is_read'] ? 'Read' : 'New' ?></span></td>
                     <td class="action-row">
-                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_feedback_read" value="<?= (int) $f['id'] ?>" class="icon-btn" data-tip="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>" aria-label="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>"><?= $f['is_read'] ? '📩' : '✔️' ?></button></form>
-                        <form method="post" onsubmit="return confirm('Delete this feedback?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_feedback" value="<?= (int) $f['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button></form>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_feedback_read" value="<?= (int) $f['id'] ?>" class="icon-btn" data-tip="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>" aria-label="<?= $f['is_read'] ? 'Mark unread' : 'Mark read' ?>"><?= $f['is_read'] ? '<i data-lucide="mail" class="lucide-icon"></i>' : '<i data-lucide="badge-check" class="lucide-icon"></i>' ?></button></form>
+                        <form method="post" onsubmit="return confirm('Delete this feedback?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="delete_feedback" value="<?= (int) $f['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete"><i data-lucide="trash-2" class="lucide-icon"></i></button></form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -309,19 +310,19 @@ $siteImageSlots = [
                     <td><?= e($c['country'] ?: '—') ?></td>
                     <td><?= (int) $c['product_count'] ?></td>
                     <td>
-                        <?php if ($c['verification_status'] === 'verified'): ?><span class="badge-verified">✔ Verified</span>
+                        <?php if ($c['verification_status'] === 'verified'): ?><span class="badge-verified"><i data-lucide="check" class="lucide-icon"></i> Verified</span>
                         <?php elseif ($c['verification_status'] === 'pending'): ?><span class="badge-pending-review">⏳ Pending</span>
-                        <?php elseif ($c['verification_status'] === 'rejected'): ?><span class="badge badge-paid">⛔ Rejected</span>
+                        <?php elseif ($c['verification_status'] === 'rejected'): ?><span class="badge badge-paid"><i data-lucide="ban" class="lucide-icon"></i> Rejected</span>
                         <?php else: ?><span class="badge" style="background:#f5f5f5;color:#888">Unverified</span><?php endif; ?>
                     </td>
                     <td class="action-row">
-                        <?php if ($c['business_license_url']): ?><a href="<?= e($c['business_license_url']) ?>" target="_blank" class="icon-btn" data-tip="View license" aria-label="View license">📄</a><?php endif; ?>
-                        <a href="chat.php?with=<?= (int) $c['user_id'] ?>" class="icon-btn" data-tip="Message" aria-label="Message">💬</a>
+                        <?php if ($c['business_license_url']): ?><a href="<?= e($c['business_license_url']) ?>" target="_blank" class="icon-btn" data-tip="View license" aria-label="View license"><i data-lucide="file-text" class="lucide-icon"></i></a><?php endif; ?>
+                        <a href="chat.php?with=<?= (int) $c['user_id'] ?>" class="icon-btn" data-tip="Message" aria-label="Message"><i data-lucide="message-circle" class="lucide-icon"></i></a>
                         <?php if ($c['verification_status'] !== 'verified'): ?>
-                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="approve_company" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Approve" aria-label="Approve">✅</button></form>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="approve_company" value="<?= (int) $c['id'] ?>" class="icon-btn" data-tip="Approve" aria-label="Approve"><i data-lucide="check-circle-2" class="lucide-icon"></i></button></form>
                         <?php endif; ?>
                         <?php if ($c['verification_status'] !== 'rejected'): ?>
-                        <form method="post" onsubmit="return confirm('Reject this company\'s verification?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="reject_company" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Reject" aria-label="Reject">⛔</button></form>
+                        <form method="post" onsubmit="return confirm('Reject this company\'s verification?')" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="reject_company" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Reject" aria-label="Reject"><i data-lucide="ban" class="lucide-icon"></i></button></form>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -331,10 +332,11 @@ $siteImageSlots = [
     <?php elseif ($tab === 'b2b_categories'): ?>
         <div class="card" style="margin-bottom:1.5rem"><div class="card-body">
             <h3 style="font-size:1rem;margin-bottom:1rem">+ Add B2B Category</h3>
+            <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.8rem">Icon must be a name from <a href="https://lucide.dev/icons" target="_blank" rel="noopener">lucide.dev/icons</a> (e.g. "wheat", "cpu", "truck").</p>
             <form method="post" style="display:grid;grid-template-columns:1fr 100px auto;gap:.6rem;align-items:end">
                 <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
                 <div class="form-group" style="margin:0"><label class="form-label">Name</label><input type="text" name="name" class="form-control" required></div>
-                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="📦"></div>
+                <div class="form-group" style="margin:0"><label class="form-label">Icon</label><input type="text" name="icon" class="form-control" placeholder="e.g. package"></div>
                 <button type="submit" name="add_b2b_category" value="1" class="btn btn-primary">+ Add</button>
             </form>
         </div></div>
@@ -343,12 +345,12 @@ $siteImageSlots = [
             <tbody>
                 <?php foreach ($b2bCategories as $c): ?>
                 <tr>
-                    <td><?= e($c['icon']) ?></td>
+                    <td><?= catIcon($c['icon']) ?></td>
                     <td><?= e($c['name']) ?></td>
                     <td class="action-row">
                         <form method="post" onsubmit="return confirm('Delete this category? Products using it will become uncategorized.')" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="delete_b2b_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete">🗑️</button>
+                            <button type="submit" name="delete_b2b_category" value="<?= (int) $c['id'] ?>" class="icon-btn icon-btn-danger" data-tip="Delete" aria-label="Delete"><i data-lucide="trash-2" class="lucide-icon"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -383,7 +385,7 @@ $siteImageSlots = [
         </div>
     <?php else: ?>
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-            <a href="?export=users" class="btn btn-outline btn-sm">⬇ Download CSV</a>
+            <a href="?export=users" class="btn btn-outline btn-sm"><i data-lucide="download" class="lucide-icon"></i> Download CSV</a>
         </div>
         <table class="table">
             <thead><tr><th>Name</th><th>Email</th><th>City</th><th>Phone</th><th>Verified</th><th>Joined</th><th>Actions</th></tr></thead>
@@ -394,14 +396,14 @@ $siteImageSlots = [
                     <td><?= e($u['email']) ?></td>
                     <td><?= e($u['city'] ?: '—') ?></td>
                     <td><?= e($u['phone'] ?: '—') ?></td>
-                    <td><?= $u['is_verified'] ? '✓ Verified' : '—' ?></td>
+                    <td><?= $u['is_verified'] ? '<i data-lucide="check" class="lucide-icon"></i> Verified' : '—' ?></td>
                     <td><?= date('M j, Y', strtotime($u['created_at'])) ?></td>
                     <td class="action-row">
-                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_verify" value="<?= (int) $u['id'] ?>" class="icon-btn" data-tip="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>" aria-label="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>"><?= $u['is_verified'] ? '🚫' : '✔️' ?></button></form>
+                        <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="<?= e(csrf()) ?>"><button type="submit" name="toggle_verify" value="<?= (int) $u['id'] ?>" class="icon-btn" data-tip="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>" aria-label="<?= $u['is_verified'] ? 'Unverify' : 'Verify' ?>"><?= $u['is_verified'] ? '<i data-lucide="ban" class="lucide-icon"></i>' : '<i data-lucide="badge-check" class="lucide-icon"></i>' ?></button></form>
                         <?php if ((int) $u['id'] !== (int) $user['id']): ?>
                         <form method="post" onsubmit="return confirm('<?= $u['is_admin'] ? 'Remove admin privileges from' : 'Grant admin privileges to' ?> <?= e($u['name']) ?>?')" style="display:inline">
                             <input type="hidden" name="_csrf" value="<?= e(csrf()) ?>">
-                            <button type="submit" name="toggle_admin" value="<?= (int) $u['id'] ?>" class="icon-btn <?= $u['is_admin'] ? 'icon-btn-danger' : '' ?>" data-tip="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>" aria-label="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>"><?= $u['is_admin'] ? '👑' : '⭐' ?></button>
+                            <button type="submit" name="toggle_admin" value="<?= (int) $u['id'] ?>" class="icon-btn <?= $u['is_admin'] ? 'icon-btn-danger' : '' ?>" data-tip="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>" aria-label="<?= $u['is_admin'] ? 'Revoke admin' : 'Make admin' ?>"><?= $u['is_admin'] ? '<i data-lucide="crown" class="lucide-icon"></i>' : '<i data-lucide="star" class="lucide-icon"></i>' ?></button>
                         </form>
                         <?php endif; ?>
                     </td>
@@ -411,6 +413,8 @@ $siteImageSlots = [
         </table>
     <?php endif; ?>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="app.js" defer></script>
+<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>
