@@ -312,7 +312,7 @@ $siteImageSlots = [
                     <td><?= (int) $c['product_count'] ?></td>
                     <td>
                         <?php if ($c['verification_status'] === 'verified'): ?><span class="badge-verified"><i data-lucide="check" class="lucide-icon"></i> Verified</span>
-                        <?php elseif ($c['verification_status'] === 'pending'): ?><span class="badge-pending-review">⏳ Pending</span>
+                        <?php elseif ($c['verification_status'] === 'pending'): ?><span class="badge-pending-review"><i data-lucide="clock" class="lucide-icon"></i> Pending</span>
                         <?php elseif ($c['verification_status'] === 'rejected'): ?><span class="badge badge-paid"><i data-lucide="ban" class="lucide-icon"></i> Rejected</span>
                         <?php else: ?><span class="badge" style="background:#f5f5f5;color:#888">Unverified</span><?php endif; ?>
                     </td>
