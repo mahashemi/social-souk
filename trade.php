@@ -43,17 +43,34 @@ $topSuppliers = $pdo->query(
         <a href="index.php">Browse</a>
         <a href="search.php">Search</a>
         <a href="trade.php">Trade</a>
-        <?php if ($user): ?><a href="profile.php?id=<?= (int) $user['id'] ?>" class="nav-user"><i data-lucide="user" class="lucide-icon"></i> <?= e($user['name']) ?></a>
+        <a href="about.php">About</a>
+        <a href="feedback.php">Feedback</a>
+        <?php if ($user): ?>
             <a href="create-listing.php">+ Sell Item</a>
             <a href="chat.php">Messages</a>
-            <a href="dashboard.php">Dashboard</a>
-            <?php if (!empty($user['is_admin'])): ?><a href="admin.php">Admin</a><?php endif; ?>
-            <a href="about.php">About</a>
-            <a href="feedback.php">Feedback</a>
-            <a href="logout.php" class="nav-btn">Logout</a>
+            <div class="nav-account">
+                <button class="nav-account-trigger" type="button" onclick="toggleAccountMenu(event)" aria-label="Account menu">
+                    <span class="nav-avatar"><?= e(mb_substr($user['name'], 0, 1)) ?></span>
+                    <i data-lucide="chevron-down" class="lucide-icon"></i>
+                </button>
+                <div class="nav-account-menu">
+                    <div class="nav-account-header">
+                        <span class="nav-avatar"><?= e(mb_substr($user['name'], 0, 1)) ?></span>
+                        <div>
+                            <div class="nav-account-name"><?= e($user['name']) ?></div>
+                            <div class="nav-account-email"><?= e($user['email']) ?></div>
+                        </div>
+                    </div>
+                    <div class="nav-menu-divider"></div>
+                    <a href="dashboard.php"><i data-lucide="layout-dashboard" class="lucide-icon"></i> Dashboard</a>
+                    <a href="profile.php?id=<?= (int) $user['id'] ?>"><i data-lucide="user" class="lucide-icon"></i> My Profile</a>
+                    <a href="chat.php"><i data-lucide="message-circle" class="lucide-icon"></i> Messages</a>
+                    <?php if (!empty($user['is_admin'])): ?><a href="admin.php"><i data-lucide="shield-check" class="lucide-icon"></i> Admin Panel</a><?php endif; ?>
+                    <div class="nav-menu-divider"></div>
+                    <a href="logout.php"><i data-lucide="log-out" class="lucide-icon"></i> Logout</a>
+                </div>
+            </div>
         <?php else: ?>
-            <a href="about.php">About</a>
-            <a href="feedback.php">Feedback</a>
             <a href="login.php">Login</a>
             <a href="register.php" class="nav-btn">Join Free</a>
         <?php endif; ?>
